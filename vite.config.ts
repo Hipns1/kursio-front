@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import { URL, fileURLToPath } from 'node:url'
@@ -18,6 +19,12 @@ export default defineConfig(({ mode }) => {
     base: base,
     server: {
       port
+    },
+    test: {
+      environment: 'jsdom',
+      globals: true,
+      include: ['src/__tests__/**/*.test.{ts,tsx}'],
+      restoreMocks: true
     }
   }
 })

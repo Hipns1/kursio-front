@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error del Servidor - 500</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta
+      name="description"
+      content="Estamos experimentando problemas técnicos. Nuestro equipo ha sido notificado y estamos trabajando para solucionarlo."
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --coral: #e06c64;
+        --blue: #5378e8;
+        --text: #2d3748;
+        --text-light: #718096;
+        --bg: #f7f8fc;
+      }
+
+      body {
+        font-family:
+          'Segoe UI',
+          system-ui,
+          -apple-system,
+          sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: var(--bg);
+        color: var(--text);
+        overflow: hidden;
+      }
+
+      body::before,
+      body::after {
+        content: '';
+        position: fixed;
+        border-radius: 50%;
+        opacity: 0.06;
+        z-index: 0;
+      }
+
+      body::before {
+        width: 500px;
+        height: 500px;
+        background: var(--blue);
+        top: -150px;
+        right: -100px;
+      }
+
+      body::after {
+        width: 400px;
+        height: 400px;
+        background: var(--coral);
+        bottom: -120px;
+        left: -80px;
+      }
+
+      .container {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        padding: 3rem 2.5rem;
+        background: white;
+        border-radius: 20px;
+        box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.06),
+          0 20px 40px -8px rgba(83, 120, 232, 0.1);
+        max-width: 420px;
+        width: 90%;
+        animation: fadeUp 0.6s ease-out;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .error-code {
+        font-size: 7rem;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 0.25rem;
+        background: linear-gradient(135deg, var(--coral) 0%, var(--blue) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -2px;
+      }
+
+      .divider {
+        width: 48px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--coral), var(--blue));
+        border-radius: 4px;
+        margin: 1rem auto 1.25rem;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        font-size: 0.95rem;
+        color: var(--text-light);
+        line-height: 1.6;
+        margin-bottom: 2rem;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, var(--blue) 0%, #6b8cf0 100%);
+        color: white;
+        text-decoration: none;
+        border: none;
+        padding: 0.75rem 1.75rem;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 12px rgba(83, 120, 232, 0.3);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(83, 120, 232, 0.4);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn svg {
+        width: 18px;
+        height: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="error-code">500</div>
+      <div class="divider"></div>
+      <h2>¡Ups! Algo salió mal</h2>
+      <p>
+        Estamos experimentando problemas técnicos. Nuestro equipo ha sido notificado y estamos trabajando para
+        solucionarlo.
+      </p>
+      <button onclick="window.location.reload()" class="btn">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.183"
+          />
+        </svg>
+        Reintentar
+      </button>
+    </div>
+  </body>
+</html>

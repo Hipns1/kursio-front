@@ -1,0 +1,77 @@
+﻿@theme {
+  --color-primary: #ab9df2;
+}
+
+:root {
+  /* Monokai Night — warm dark backgrounds */
+  --bg-base: #1d1a1e;
+  --bg-surface: #221f22;
+  --bg-card: #2d2a2e;
+  --bg-elevated: #403e41;
+  --nav-bg: rgba(29,26,30,0.94);
+
+  --border-subtle: rgba(171,157,242,0.08);
+  --border-default: rgba(171,157,242,0.18);
+  --border-strong: rgba(171,157,242,0.45);
+
+  /* Primary — Monokai purple */
+  --primary: #ab9df2;
+  --primary-dark: #7c6af0;
+  --primary-glow: rgba(171,157,242,0.24);
+
+  /* Accent — Monokai cyan */
+  --accent: #78dce8;
+  --accent-glow: rgba(120,220,232,0.18);
+
+  /* Success — Monokai green */
+  --success: #a9dc76;
+  --success-bg: rgba(169,220,118,0.08);
+  --success-border: rgba(169,220,118,0.22);
+
+  /* Warning — Monokai yellow */
+  --warning: #ffd866;
+  --warning-bg: rgba(255,216,102,0.08);
+  --warning-border: rgba(255,216,102,0.22);
+
+  /* Danger — Monokai pink/red */
+  --danger: #ff6188;
+  --danger-bg: rgba(255,97,136,0.08);
+  --danger-border: rgba(255,97,136,0.22);
+
+  --text-1: #fcfcfa;
+  --text-2: #939293;
+  --text-3: #5b595c;
+
+  --grad: linear-gradient(135deg, #ab9df2 0%, #78dce8 100%);
+  --grad-alt: linear-gradient(135deg, #ff6188 0%, #ab9df2 100%);
+  --grad-success: linear-gradient(135deg, #a9dc76, #78dce8);
+
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.50);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.60);
+  --shadow-float: 0 20px 60px rgba(0,0,0,0.75);
+}
+
+[data-theme="light"] {
+  --bg-base: #f0f4ff;
+  --bg-surface: #e8edf8;
+  --bg-card: #ffffff;
+  --bg-elevated: #dde5f0;
+  --nav-bg: rgba(240,244,255,0.94);
+  --border-subtle: rgba(171,157,242,0.10);
+  --border-default: rgba(171,157,242,0.24);
+  --border-strong: rgba(171,157,242,0.55);
+  --primary-glow: rgba(171,157,242,0.15);
+  --accent-glow: rgba(120,220,232,0.12);
+  --success-bg: rgba(169,220,118,0.10);
+  --success-border: rgba(169,220,118,0.24);
+  --warning-bg: rgba(255,216,102,0.10);
+  --warning-border: rgba(255,216,102,0.24);
+  --danger-bg: rgba(255,97,136,0.10);
+  --danger-border: rgba(255,97,136,0.24);
+  --text-1: #0f172a;
+  --text-2: #475569;
+  --text-3: #94a3b8;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.10);
+  --shadow-float: 0 20px 60px rgba(0,0,0,0.15);
+}

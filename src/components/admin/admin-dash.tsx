@@ -314,7 +314,11 @@ export function AdminDash({ onLogout, token }: AdminDashProps) {
                   setCreateError('')
                 }}
                 className='w-full rounded-xl py-3 text-sm font-bold transition-all'
-                style={{ background: 'var(--grad)', boxShadow: '0 4px 12px var(--primary-glow)', color: '#fff' }}
+                style={{
+                  background: 'var(--grad)',
+                  boxShadow: '0 4px 12px var(--primary-glow)',
+                  color: 'var(--on-primary)'
+                }}
               >
                 ➕ Registrar aprendiz
               </button>
@@ -341,7 +345,11 @@ export function AdminDash({ onLogout, token }: AdminDashProps) {
                       className='rounded-xl px-3 py-2 text-xs font-semibold whitespace-nowrap transition-all'
                       style={
                         filterStatus === val
-                          ? { background: 'var(--grad)', boxShadow: '0 2px 8px var(--primary-glow)', color: '#fff' }
+                          ? {
+                              background: 'var(--grad)',
+                              boxShadow: '0 2px 8px var(--primary-glow)',
+                              color: 'var(--on-primary)'
+                            }
                           : {
                               background: 'var(--tint-1)',
                               border: '1px solid var(--border-subtle)',

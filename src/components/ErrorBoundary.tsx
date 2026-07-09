@@ -1,4 +1,4 @@
-﻿import { Component, ErrorInfo, ReactNode } from 'react'
+import { Component, ErrorInfo, ReactNode } from 'react'
 
 interface Props {
   children?: ReactNode
@@ -37,7 +37,7 @@ class ErrorBoundary extends Component<Props, State> {
                 this.setState({ hasError: false, message: '' })
                 window.location.reload()
               }}
-              className='rounded-xl bg-[var(--grad)] px-6 py-2.5 text-sm font-bold text-white transition-all hover:opacity-80'
+              className='text-on-primary rounded-xl bg-[var(--grad)] px-6 py-2.5 text-sm font-bold transition-all hover:opacity-80'
             >
               Recargar página
             </button>

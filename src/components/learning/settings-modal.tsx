@@ -1,4 +1,4 @@
-﻿interface SettingsModalProps {
+interface SettingsModalProps {
   username: string
   onLogout: () => void
   onClose: () => void
@@ -37,7 +37,11 @@ export function SettingsModal({ onClose, onLogout, username }: SettingsModalProp
             <div className='flex items-center gap-3.5'>
               <div
                 className='flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-semibold select-none'
-                style={{ background: 'var(--grad)', boxShadow: '0 4px 16px var(--primary-glow)', color: '#fff' }}
+                style={{
+                  background: 'var(--grad)',
+                  boxShadow: '0 4px 16px var(--primary-glow)',
+                  color: 'var(--on-primary)'
+                }}
               >
                 {initials || '?'}
               </div>

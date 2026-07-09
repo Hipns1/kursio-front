@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import type { Lesson } from '@/types/learning'
 import { LessonBlock } from './lesson-block'
 
@@ -26,7 +26,7 @@ export function LessonCard({ idx, isRead, lesson, onRead }: LessonCardProps) {
           style={{
             background: isRead ? 'var(--success)' : 'var(--tint-2)',
             border: isRead ? 'none' : '1px solid var(--border-subtle)',
-            color: isRead ? '#fff' : 'var(--text-3)'
+            color: isRead ? 'var(--on-primary)' : 'var(--text-3)'
           }}
         >
           {isRead ? '✓' : idx + 1}
@@ -48,7 +48,7 @@ export function LessonCard({ idx, isRead, lesson, onRead }: LessonCardProps) {
           {!isRead ? (
             <button
               onClick={onRead}
-              className='mt-3 w-full rounded-xl py-2.5 text-sm font-semibold text-white transition-all'
+              className='text-on-primary mt-3 w-full rounded-xl py-2.5 text-sm font-semibold transition-all'
               style={{ background: 'var(--success)', boxShadow: '0 4px 12px var(--success-border)' }}
             >
               ✓ Marcar como leído

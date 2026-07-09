@@ -1,19 +1,19 @@
-﻿type BtnColor = 'primary' | 'green' | 'red' | 'orange' | 'violet'
+type BtnColor = 'primary' | 'green' | 'red' | 'orange' | 'violet'
 
-const gradients: Record<BtnColor, string> = {
-  green: 'var(--grad-success)',
-  orange: 'linear-gradient(135deg,#F97316,#EA580C)',
+const fills: Record<BtnColor, string> = {
+  green: 'var(--success)',
+  orange: 'var(--warning)',
   primary: 'var(--grad)',
-  red: 'linear-gradient(135deg,var(--danger),#DC2626)',
-  violet: 'linear-gradient(135deg,#8B5CF6,#7C3AED)'
+  red: 'var(--danger)',
+  violet: 'var(--accent)'
 }
 
 const glows: Record<BtnColor, string> = {
   green: 'var(--success-border)',
-  orange: 'rgba(249,115,22,0.30)',
+  orange: 'var(--warning-border)',
   primary: 'var(--primary-glow)',
   red: 'var(--danger-border)',
-  violet: 'rgba(139,92,246,0.30)'
+  violet: 'var(--accent-glow)'
 }
 
 interface PrimaryBtnProps {
@@ -29,7 +29,7 @@ export function PrimaryBtn({ children, className = '', color = 'primary', disabl
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`w-full rounded-xl py-3 text-sm font-bold text-white transition-all active:scale-[0.98] ${className}`}
+      className={`text-on-primary w-full rounded-xl py-3 text-sm font-bold transition-all active:scale-[0.98] ${className}`}
       style={
         disabled
           ? {
@@ -38,7 +38,7 @@ export function PrimaryBtn({ children, className = '', color = 'primary', disabl
               cursor: 'not-allowed'
             }
           : {
-              background: gradients[color],
+              background: fills[color],
               boxShadow: `0 4px 16px ${glows[color]}`
             }
       }

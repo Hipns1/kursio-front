@@ -93,9 +93,9 @@ export function CourseScores() {
             <button
               onClick={handleBatchGrade}
               disabled={batchGrading}
-              className='rounded-lg px-3 py-1.5 text-xs font-semibold text-white transition-all hover:opacity-80'
+              className='text-on-primary rounded-lg px-3 py-1.5 text-xs font-semibold transition-all hover:opacity-80 disabled:opacity-50'
               style={{
-                background: batchGrading ? 'var(--primary-glow)' : 'var(--primary)',
+                background: 'var(--primary)',
                 boxShadow: '0 2px 8px var(--primary-glow)'
               }}
             >

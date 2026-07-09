@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import type { AdminExercise, UpdateCoursePayload } from '@/services/backend'
 import type { CreateCoursePayload, CreatePhasePayload } from '@/services/backend'
 import {
@@ -627,7 +627,11 @@ export function ContentTab({ onUnauthorized, token }: { token: string; onUnautho
           <button
             onClick={() => setShowCreateCourse(true)}
             className='shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all hover:opacity-80'
-            style={{ background: 'var(--grad)', boxShadow: '0 2px 8px var(--primary-glow)', color: '#fff' }}
+            style={{
+              background: 'var(--grad)',
+              boxShadow: '0 2px 8px var(--primary-glow)',
+              color: 'var(--on-primary)'
+            }}
           >
             ➕ Nuevo curso
           </button>
@@ -982,7 +986,11 @@ export function ContentTab({ onUnauthorized, token }: { token: string; onUnautho
                 className='rounded-xl py-2.5 text-sm font-bold transition-all'
                 style={
                   activeTab === t
-                    ? { background: 'var(--grad)', boxShadow: '0 4px 12px var(--primary-glow)', color: '#fff' }
+                    ? {
+                        background: 'var(--grad)',
+                        boxShadow: '0 4px 12px var(--primary-glow)',
+                        color: 'var(--on-primary)'
+                      }
                     : { background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', color: 'var(--text-3)' }
                 }
               >

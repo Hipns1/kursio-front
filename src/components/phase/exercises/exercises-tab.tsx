@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ExerciseRecord, GradeResult, Progress } from '@/types/learning'
 import { CodeBlock, TypeBadge } from '@/components/ui'
 import { PHASES } from '@/utils/consts/learning-data'
@@ -239,7 +239,7 @@ export function ExercisesTab({
             onClick={() => isCurrentAnswered && goTo(idx + 1)}
             disabled={!isCurrentAnswered}
             title={!isCurrentAnswered ? 'Respondé este ejercicio para continuar' : undefined}
-            className='rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-all hover:opacity-90'
+            className='text-on-primary rounded-xl px-5 py-2.5 text-sm font-semibold transition-all hover:opacity-90'
             style={{
               background: 'var(--grad)',
               boxShadow: isCurrentAnswered ? '0 4px 14px var(--primary-glow)' : 'none',
@@ -254,7 +254,7 @@ export function ExercisesTab({
             onClick={() => allAnswered && onNextPhase()}
             disabled={!allAnswered}
             title={!allAnswered ? 'Completá todos los ejercicios para continuar' : undefined}
-            className='rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-all hover:opacity-90'
+            className='text-on-primary rounded-xl px-5 py-2.5 text-sm font-semibold transition-all hover:opacity-90'
             style={{
               background: 'var(--grad-success)',
               boxShadow: allAnswered ? '0 4px 14px var(--success-border)' : 'none',

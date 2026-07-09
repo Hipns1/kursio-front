@@ -1,4 +1,4 @@
-﻿import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export function NotFound() {
   const navigate = useNavigate()
@@ -13,7 +13,7 @@ export function NotFound() {
         <p className='text-fg-subtle mb-8 text-sm'>La ruta que buscás no existe o fue movida.</p>
         <button
           onClick={() => navigate('/', { replace: true })}
-          className='rounded-xl bg-[var(--grad)] px-6 py-2.5 text-sm font-bold text-white transition-all hover:opacity-80'
+          className='text-on-primary rounded-xl bg-[var(--grad)] px-6 py-2.5 text-sm font-bold transition-all hover:opacity-80'
         >
           ← Volver al inicio
         </button>

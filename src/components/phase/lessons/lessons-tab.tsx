@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import type { Progress } from '@/types/learning'
 import { LESSONS } from '@/utils/consts/learning-data'
 import { LessonBlock } from './lesson-block'
@@ -161,8 +161,8 @@ export function LessonsTab({
 
         <button
           onClick={goNext}
-          className='rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-all hover:opacity-90'
-          style={{ background: '#16a34a', boxShadow: '0 4px 14px rgba(22,163,74,0.30)' }}
+          className='text-on-primary rounded-xl px-5 py-2.5 text-sm font-semibold transition-all hover:opacity-90'
+          style={{ background: 'var(--success)', boxShadow: '0 4px 14px var(--success-border)' }}
         >
           {isLast ? (allRead ? 'Ir a ejercicios →' : 'Listo →') : 'Siguiente →'}
         </button>

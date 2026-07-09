@@ -147,7 +147,7 @@ function QuestionFormModal({
             style={{
               background: 'var(--grad)',
               boxShadow: '0 4px 12px var(--primary-glow)',
-              color: '#fff'
+              color: 'var(--on-primary)'
             }}
           >
             {loading ? 'Guardando...' : 'Guardar'}

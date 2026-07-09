@@ -48,7 +48,7 @@ function RoadmapCard({ course, index, isLast, item }: RoadmapCardProps) {
             background: item.priority === 1 ? 'var(--grad)' : bg,
             border: `2px solid ${color}`,
             boxShadow: item.priority === 1 ? `0 0 0 4px ${color}22` : 'none',
-            color: item.priority === 1 ? '#fff' : color
+            color: item.priority === 1 ? 'var(--on-primary)' : color
           }}
         >
           {stepNum}
@@ -230,7 +230,7 @@ export function RoadmapScreen({ courses, onBack, roadmap }: Props) {
             style={{
               background: 'var(--grad)',
               boxShadow: '0 4px 14px var(--primary-glow)',
-              color: '#fff'
+              color: 'var(--on-primary)'
             }}
           >
             Ir a mis cursos →

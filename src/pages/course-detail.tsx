@@ -208,7 +208,7 @@ export function CourseDetail() {
               style={{
                 background: 'var(--grad)',
                 boxShadow: '0 4px 16px var(--primary-glow)',
-                color: '#fff',
+                color: 'var(--on-primary)',
                 whiteSpace: 'nowrap'
               }}
             >
@@ -227,7 +227,7 @@ export function CourseDetail() {
               style={{
                 background: 'var(--grad)',
                 boxShadow: '0 4px 16px var(--primary-glow)',
-                color: '#fff',
+                color: 'var(--on-primary)',
                 whiteSpace: 'nowrap'
               }}
             >

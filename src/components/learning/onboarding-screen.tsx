@@ -236,7 +236,7 @@ export function OnboardingScreen({ onComplete, token }: Props) {
                       background: answers[current.id] ? 'var(--grad)' : 'var(--bg-card)',
                       border: answers[current.id] ? 'none' : '1px solid var(--border-default)',
                       boxShadow: answers[current.id] ? '0 4px 14px var(--primary-glow)' : 'none',
-                      color: answers[current.id] ? '#fff' : 'var(--text-3)'
+                      color: answers[current.id] ? 'var(--on-primary)' : 'var(--text-3)'
                     }}
                   >
                     Siguiente →
@@ -250,7 +250,7 @@ export function OnboardingScreen({ onComplete, token }: Props) {
                       background: allAnswered ? 'var(--grad)' : 'var(--bg-card)',
                       border: allAnswered ? 'none' : '1px solid var(--border-default)',
                       boxShadow: allAnswered ? '0 4px 14px var(--primary-glow)' : 'none',
-                      color: allAnswered ? '#fff' : 'var(--text-3)'
+                      color: allAnswered ? 'var(--on-primary)' : 'var(--text-3)'
                     }}
                   >
                     🚀 Generar mi Roadmap

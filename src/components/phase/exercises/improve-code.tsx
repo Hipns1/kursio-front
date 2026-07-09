@@ -12,14 +12,14 @@ interface ImproveCodeProps {
   onGrade?: (exerciseId: string, result: GradeResult) => void
 }
 
-export function ImproveCode({ exercise, saved, onAnswer, studentToken, onGrade }: ImproveCodeProps) {
+export function ImproveCode({ exercise, onAnswer, onGrade, saved, studentToken }: ImproveCodeProps) {
   const [val, setVal] = useState(saved?.userAnswer ?? '')
-  const { grading, apiError, grade } = useAutoGrade(exercise, onGrade, studentToken)
+  const { apiError, grade, grading } = useAutoGrade(exercise, onGrade, studentToken)
   const done = saved !== undefined
 
   const submit = async () => {
     if (!val.trim()) return
-    onAnswer({ type: exercise.type, userAnswer: val, autoCorrect: null })
+    onAnswer({ autoCorrect: null, type: exercise.type, userAnswer: val })
     await grade(val)
   }
 
@@ -27,8 +27,8 @@ export function ImproveCode({ exercise, saved, onAnswer, studentToken, onGrade }
     <div>
       <CodeEditor value={val} onChange={done ? undefined : setVal} readOnly={done} minHeight={220} />
       {!done && (
-        <div className="mt-3">
-          <PrimaryBtn onClick={submit} disabled={!val.trim()} color="orange">
+        <div className='mt-3'>
+          <PrimaryBtn onClick={submit} disabled={!val.trim()} color='orange'>
             Enviar mejora y auto-calificar 🤖
           </PrimaryBtn>
         </div>

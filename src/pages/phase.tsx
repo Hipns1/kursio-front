@@ -9,24 +9,33 @@ export function Phase() {
   const navigate = useNavigate()
   const phaseId = Number(id)
 
-  const { username, studentToken, contentVersion, progress, activeCourseSlug, saveExercise, applyGrade, markLessonRead } = useBoundStore(
+  const {
+    activeCourseSlug,
+    applyGrade,
+    contentVersion,
+    markLessonRead,
+    progress,
+    saveExercise,
+    studentToken,
+    username
+  } = useBoundStore(
     useShallow((s) => ({
-      username: s.username,
-      studentToken: s.studentToken,
-      contentVersion: s.contentVersion,
-      progress: s.progress,
       activeCourseSlug: s.activeCourseSlug,
-      saveExercise: s.saveExercise,
       applyGrade: s.applyGrade,
+      contentVersion: s.contentVersion,
       markLessonRead: s.markLessonRead,
-    })),
+      progress: s.progress,
+      saveExercise: s.saveExercise,
+      studentToken: s.studentToken,
+      username: s.username
+    }))
   )
 
   const courseSlug = slug ?? activeCourseSlug
   const backPath = courseSlug ? `/course/${courseSlug}` : '/'
 
-  if (!username || !studentToken) return <Navigate to="/" replace />
-  if (contentVersion === 0) return <Navigate to="/" replace />
+  if (!username || !studentToken) return <Navigate to='/' replace />
+  if (contentVersion === 0) return <Navigate to='/' replace />
   if (isNaN(phaseId) || !PHASES.find((p) => p.id === phaseId)) return <Navigate to={backPath} replace />
 
   const nextPhaseId = phaseId + 1

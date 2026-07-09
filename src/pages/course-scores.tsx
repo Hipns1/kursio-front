@@ -13,37 +13,34 @@ export function CourseScores() {
   const { slug } = useParams<{ slug: string }>()
   const navigate = useNavigate()
 
-  const { username, studentToken, progress, contentVersion, courses, applyGrade } = useBoundStore(
+  const { applyGrade, contentVersion, courses, progress, studentToken, username } = useBoundStore(
     useShallow((s) => ({
-      username: s.username,
-      studentToken: s.studentToken,
-      progress: s.progress,
+      applyGrade: s.applyGrade,
       contentVersion: s.contentVersion,
       courses: s.courses,
-      applyGrade: s.applyGrade,
-    })),
+      progress: s.progress,
+      studentToken: s.studentToken,
+      username: s.username
+    }))
   )
 
   const [batchGrading, setBatchGrading] = useState(false)
   const [batchDone, setBatchDone] = useState(0)
 
-  if (!username || !studentToken) return <Navigate to="/" replace />
-  if (contentVersion === 0) return <Navigate to="/" replace />
-  if (!slug || !courses.find((c) => c.slug === slug)) return <Navigate to="/" replace />
+  if (!username || !studentToken) return <Navigate to='/' replace />
+  if (contentVersion === 0) return <Navigate to='/' replace />
+  if (!slug || !courses.find((c) => c.slug === slug)) return <Navigate to='/' replace />
 
   const course = courses.find((c) => c.slug === slug)!
 
-  // Derive exercises directly from the full course data (not mutable globals)
   const fullCourse = ALL_COURSES.find((c) => c.slug === slug)
-  const courseExercises: Exercise[] = fullCourse
-    ? fullCourse.phases.flatMap((p) => p.exercises as Exercise[])
-    : []
+  const courseExercises: Exercise[] = fullCourse ? fullCourse.phases.flatMap((p) => p.exercises as Exercise[]) : []
 
   const globalScore = getGlobalAvgScore(progress)
 
   const pendingExercises = courseExercises.filter((e) => {
     const s = progress[e.id] as ExerciseRecord | undefined
-    return s && s.autoCorrect === null && !s.claudeFeedback && isTheoryComplete(progress, e.phase)
+    return s?.autoCorrect === null && !s.claudeFeedback && isTheoryComplete(progress, e.phase)
   })
 
   const handleBatchGrade = async () => {
@@ -56,52 +53,41 @@ export function CourseScores() {
       try {
         const result = await gradeExercise(studentToken, ex, saved.userAnswer!)
         applyGrade(ex.id, result)
-      } catch {
-        // silent
-      }
+      } catch {}
       setBatchDone(i + 1)
     }
     setBatchGrading(false)
   }
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg-base)' }}>
-
-      {/* ── Navbar ── */}
-      <nav
-        className="sticky top-0 z-10 px-6 py-3.5 flex items-center gap-3"
-        style={{ background: 'var(--nav-bg)', borderBottom: '1px solid var(--border-subtle)', backdropFilter: 'blur(20px)' }}
-      >
+    <div className='bg-surface min-h-screen'>
+      <nav className='bg-nav border-hairline sticky top-0 z-10 flex items-center gap-3 border-b px-6 py-3.5 backdrop-blur-[20px]'>
         <button
           onClick={() => navigate(`/course/${slug}`)}
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-sm transition-all hover:opacity-70"
-          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-subtle)' }}
-          title="Volver al curso"
+          className='border-hairline bg-tint flex h-8 w-8 items-center justify-center rounded-lg border text-sm transition-all hover:opacity-70'
+          title='Volver al curso'
         >
           ←
         </button>
         <div
-          className="w-8 h-8 rounded-xl flex items-center justify-center text-base shrink-0 overflow-hidden"
+          className='flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-xl text-base'
           style={{ background: `${course.color}25`, border: `1px solid ${course.color}40` }}
         >
-          <CourseIcon icon={course.icon} className="w-8 h-8" />
+          <CourseIcon icon={course.icon} className='h-8 w-8' />
         </div>
-        <div className="flex-1 min-w-0">
-          <div className="font-black text-sm leading-tight truncate" style={{ color: 'var(--text-1)' }}>
-            {course.name}
-          </div>
-          <div className="text-xs leading-tight" style={{ color: 'var(--text-3)' }}>
-            Calificaciones · {username}
-          </div>
+        <div className='min-w-0 flex-1'>
+          <div className='text-fg truncate text-sm leading-tight font-semibold'>{course.name}</div>
+          <div className='text-fg-subtle text-xs leading-tight'>Calificaciones · {username}</div>
         </div>
 
         {globalScore !== null && (
           <div
-            className="px-3 py-1.5 rounded-xl text-xs font-bold font-mono"
+            className='rounded-xl px-3 py-1.5 font-mono text-xs font-bold'
             style={{
-              background: globalScore >= 80 ? 'rgba(169,220,118,0.12)' : globalScore >= 50 ? 'rgba(255,216,102,0.12)' : 'rgba(255,97,136,0.12)',
-              color: globalScore >= 80 ? '#6EE7B7' : globalScore >= 50 ? '#ffd866' : '#ffb3c6',
-              border: `1px solid ${globalScore >= 80 ? 'rgba(169,220,118,0.25)' : globalScore >= 50 ? 'rgba(255,216,102,0.25)' : 'rgba(255,97,136,0.25)'}`,
+              background:
+                globalScore >= 80 ? 'var(--success-bg)' : globalScore >= 50 ? 'var(--warning-bg)' : 'var(--danger-bg)',
+              border: `1px solid ${globalScore >= 80 ? 'var(--success-border)' : globalScore >= 50 ? 'var(--warning-border)' : 'var(--danger-border)'}`,
+              color: globalScore >= 80 ? 'var(--success)' : globalScore >= 50 ? 'var(--warning)' : 'var(--danger)'
             }}
           >
             ⭐ {globalScore}/100
@@ -111,24 +97,28 @@ export function CourseScores() {
         <ThemeToggle />
       </nav>
 
-      <div className="max-w-3xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
+      <div className='mx-auto max-w-3xl px-4 py-8'>
+        <div className='mb-6 flex items-center justify-between'>
           <div>
-            <h1 className="font-black text-xl" style={{ color: 'var(--text-1)' }}>
-              📊 Calificaciones
-            </h1>
-            <p className="text-xs mt-1" style={{ color: 'var(--text-3)' }}>
-              {fullCourse?.phases.length ?? 0} fase{(fullCourse?.phases.length ?? 0) !== 1 ? 's' : ''} · {courseExercises.length} ejercicio{courseExercises.length !== 1 ? 's' : ''}
+            <h1 className='text-fg text-xl font-semibold'>📊 Calificaciones</h1>
+            <p className='text-fg-subtle mt-1 text-xs'>
+              {fullCourse?.phases.length ?? 0} fase{(fullCourse?.phases.length ?? 0) !== 1 ? 's' : ''} ·{' '}
+              {courseExercises.length} ejercicio{courseExercises.length !== 1 ? 's' : ''}
             </p>
           </div>
           {studentToken && pendingExercises.length > 0 && (
             <button
               onClick={handleBatchGrade}
               disabled={batchGrading}
-              className="text-xs font-semibold px-3 py-1.5 rounded-lg text-white transition-all hover:opacity-80"
-              style={{ background: batchGrading ? 'rgba(171,157,242,0.50)' : 'var(--primary)', boxShadow: '0 2px 8px var(--primary-glow)' }}
+              className='rounded-lg px-3 py-1.5 text-xs font-semibold text-white transition-all hover:opacity-80'
+              style={{
+                background: batchGrading ? 'var(--primary-glow)' : 'var(--primary)',
+                boxShadow: '0 2px 8px var(--primary-glow)'
+              }}
             >
-              {batchGrading ? `🤖 ${batchDone}/${pendingExercises.length}...` : `🤖 Calificar todo (${pendingExercises.length})`}
+              {batchGrading
+                ? `🤖 ${batchDone}/${pendingExercises.length}...`
+                : `🤖 Calificar todo (${pendingExercises.length})`}
             </button>
           )}
         </div>

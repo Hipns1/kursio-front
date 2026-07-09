@@ -7,8 +7,8 @@ import { fetchContent, getRoadmap } from '@/services/backend'
 
 function LoadingScreen() {
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ background: 'var(--bg-base)' }}>
-      <p className="text-sm animate-pulse" style={{ color: 'var(--text-3)' }}>Cargando...</p>
+    <div className='bg-surface flex min-h-screen items-center justify-center'>
+      <p className='text-fg-subtle animate-pulse text-sm'>Cargando...</p>
     </div>
   )
 }
@@ -18,39 +18,39 @@ export function Learning() {
   const navigate = useNavigate()
 
   const {
-    username,
-    studentToken,
-    progress,
+    allowedCourseIds,
+    clearUser,
     contentVersion,
     courses,
-    allowedCourseIds,
+    progress,
     roadmap,
     roadmapChecked,
     roadmapMissing,
-    setStudentLogin,
-    clearUser,
     setContent,
     setRoadmap,
     setRoadmapChecked,
     setRoadmapMissing,
+    setStudentLogin,
+    studentToken,
+    username
   } = useBoundStore(
     useShallow((s) => ({
-      username: s.username,
-      studentToken: s.studentToken,
-      progress: s.progress,
+      allowedCourseIds: s.allowedCourseIds,
+      clearUser: s.clearUser,
       contentVersion: s.contentVersion,
       courses: s.courses,
-      allowedCourseIds: s.allowedCourseIds,
+      progress: s.progress,
       roadmap: s.roadmap,
       roadmapChecked: s.roadmapChecked,
       roadmapMissing: s.roadmapMissing,
-      setStudentLogin: s.setStudentLogin,
-      clearUser: s.clearUser,
       setContent: s.setContent,
       setRoadmap: s.setRoadmap,
       setRoadmapChecked: s.setRoadmapChecked,
       setRoadmapMissing: s.setRoadmapMissing,
-    })),
+      setStudentLogin: s.setStudentLogin,
+      studentToken: s.studentToken,
+      username: s.username
+    }))
   )
 
   useEffect(() => {
@@ -79,8 +79,6 @@ export function Learning() {
           setRoadmapMissing(true)
           navigate('/onboarding', { replace: true })
         }
-        // On any other error (network, server down), treat roadmap as checked
-        // so users can still access their courses without redirect
       })
   }, [username, studentToken, contentVersion, roadmapChecked])
 
@@ -91,7 +89,7 @@ export function Learning() {
     name: string,
     p: import('@/types/learning').Progress,
     aid: number[],
-    coursesData: import('@/types/learning').Course[],
+    coursesData: import('@/types/learning').Course[]
   ) => {
     setStudentLogin(token, name, p, aid)
     setContent(coursesData)
@@ -111,13 +109,11 @@ export function Learning() {
   if (contentVersion === 0 || !roadmapChecked) return <LoadingScreen />
 
   if (roadmapChecked && roadmapMissing) {
-    return <Navigate to="/onboarding" replace />
+    return <Navigate to='/onboarding' replace />
   }
 
   const visibleCourses =
-    allowedCourseIds.length === 0
-      ? courses
-      : courses.filter((c) => allowedCourseIds.includes(c.id))
+    allowedCourseIds.length === 0 ? courses : courses.filter((c) => allowedCourseIds.includes(c.id))
 
   if (visibleCourses.length === 1) {
     return <Navigate to={`/course/${visibleCourses[0].slug}`} replace />
@@ -125,7 +121,7 @@ export function Learning() {
 
   return (
     <>
-      <div id="global-progress" />
+      <div id='global-progress' />
       <CourseSelectorScreen
         username={username}
         courses={visibleCourses}
@@ -135,11 +131,7 @@ export function Learning() {
         onSettings={() => setShowSettings(true)}
       />
       {showSettings && (
-        <SettingsModal
-          username={username}
-          onLogout={handleLogout}
-          onClose={() => setShowSettings(false)}
-        />
+        <SettingsModal username={username} onLogout={handleLogout} onClose={() => setShowSettings(false)} />
       )}
     </>
   )

@@ -20,53 +20,54 @@ export function AdminOnboarding() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg-base)' }}>
-      {/* ── Nav ── */}
-      <nav
-        className="sticky top-0 z-10 px-6 py-3.5 flex items-center justify-between"
-        style={{ background: 'var(--nav-bg)', borderBottom: '1px solid var(--border-subtle)', backdropFilter: 'blur(20px)' }}
-      >
-        <div className="flex items-center gap-3">
+    <div className='bg-surface min-h-screen'>
+      <nav className='bg-nav border-hairline sticky top-0 z-10 flex items-center justify-between border-b px-6 py-3.5 backdrop-blur-[20px]'>
+        <div className='flex items-center gap-3'>
           <div
-            className="w-8 h-8 rounded-xl flex items-center justify-center text-base"
+            className='flex h-8 w-8 items-center justify-center rounded-xl text-base'
             style={{ background: 'var(--grad)', boxShadow: '0 4px 12px var(--primary-glow)' }}
           >
             🛡️
           </div>
           <div>
-            <div className="font-bold text-sm leading-tight" style={{ color: 'var(--text-1)' }}>Panel Admin</div>
-            <div className="text-xs leading-tight" style={{ color: 'var(--text-3)' }}>.NET Backend Learning</div>
+            <div className='text-fg text-sm leading-tight font-bold'>Panel Admin</div>
+            <div className='text-fg-subtle text-xs leading-tight'>.NET Backend Learning</div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className='flex items-center gap-2'>
           <ThemeToggle />
           <button
             onClick={handleLogout}
-            className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:opacity-80"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-subtle)', color: 'var(--text-2)' }}
+            className='border-hairline text-fg-muted bg-tint rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all hover:opacity-80'
           >
             Cerrar sesión
           </button>
         </div>
       </nav>
 
-      {/* ── Section nav ── */}
-      <div className="border-b" style={{ borderColor: 'var(--border-subtle)' }}>
-        <div className="max-w-6xl mx-auto px-4 flex gap-1 pt-2">
-          {([
-            { to: '/admin/aprendices', label: '👥 Aprendices' },
-            { to: '/admin/contenido', label: '📚 Contenido' },
-            { to: '/admin/onboarding', label: '🧭 Onboarding' },
-          ] as const).map(({ to, label }) => {
+      <div className='border-hairline border-b'>
+        <div className='mx-auto flex max-w-6xl gap-1 px-4 pt-2'>
+          {(
+            [
+              { label: '👥 Aprendices', to: '/admin/aprendices' },
+              { label: '📚 Contenido', to: '/admin/contenido' },
+              { label: '🧭 Onboarding', to: '/admin/onboarding' }
+            ] as const
+          ).map(({ label, to }) => {
             const active = location.pathname === to
             return (
               <Link
                 key={to}
                 to={to}
-                className="text-sm font-semibold px-4 py-2 rounded-t-xl transition-all"
-                style={active
-                  ? { background: 'var(--bg-card)', color: 'var(--primary)', borderBottom: '2px solid var(--primary)' }
-                  : { color: 'var(--text-3)' }
+                className='rounded-t-xl px-4 py-2 text-sm font-semibold transition-all'
+                style={
+                  active
+                    ? {
+                        background: 'var(--bg-card)',
+                        borderBottom: '2px solid var(--primary)',
+                        color: 'var(--primary)'
+                      }
+                    : { color: 'var(--text-3)' }
                 }
               >
                 {label}
@@ -76,7 +77,7 @@ export function AdminOnboarding() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className='mx-auto max-w-6xl px-4 py-8'>
         <OnboardingTab token={token} />
       </div>
     </div>

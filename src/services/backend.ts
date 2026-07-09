@@ -1,4 +1,14 @@
-import type { Course, CourseSummary, Exercise, GradeResult, Lesson, OnboardingQuestion, Phase, Progress, StudentRoadmapResult } from '@/types/learning'
+import type {
+  Course,
+  CourseSummary,
+  Exercise,
+  GradeResult,
+  Lesson,
+  OnboardingQuestion,
+  Phase,
+  Progress,
+  StudentRoadmapResult
+} from '@/types/learning'
 
 const BASE_URL = (import.meta.env.VITE_BACKEND_URL as string | undefined) ?? 'http://localhost:5100/v1'
 
@@ -6,7 +16,7 @@ async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   const { headers: initHeaders, ...rest } = init
   const res = await fetch(`${BASE_URL}${path}`, {
     ...rest,
-    headers: { 'Content-Type': 'application/json', ...(initHeaders as Record<string, string>) },
+    headers: { 'Content-Type': 'application/json', ...(initHeaders as Record<string, string>) }
   })
   if (!res.ok) {
     const text = await res.text().catch(() => '')
@@ -55,27 +65,27 @@ export interface CreatedStudent {
 
 export function studentLogin(accessKey: string): Promise<StudentLoginResult> {
   return api('/learning/auth/student/login', {
-    method: 'POST',
     body: JSON.stringify({ accessKey }),
+    method: 'POST'
   })
 }
 
 export function adminLogin(username: string, password: string): Promise<AdminLoginResult> {
   return api('/learning/auth/admin/login', {
-    method: 'POST',
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({ password, username }),
+    method: 'POST'
   })
 }
 
 export function validateStudentSession(token: string): Promise<{ isActive: boolean; allowedCourseIds: number[] }> {
   return api('/learning/auth/student/validate', {
-    headers: bearer(token),
+    headers: bearer(token)
   })
 }
 
 export async function fetchProgress(token: string): Promise<Progress> {
   const data = await api<{ progressData: string }>('/learning/progress', {
-    headers: bearer(token),
+    headers: bearer(token)
   })
   try {
     return JSON.parse(data.progressData) as Progress
@@ -86,36 +96,36 @@ export async function fetchProgress(token: string): Promise<Progress> {
 
 export function syncProgress(token: string, progress: Progress): Promise<void> {
   return api('/learning/progress', {
-    method: 'PUT',
-    headers: bearer(token),
     body: JSON.stringify({ progressData: JSON.stringify(progress) }),
+    headers: bearer(token),
+    method: 'PUT'
   })
 }
 
 export function gradeExercise(token: string, exercise: Exercise, userAnswer: string): Promise<GradeResult> {
   return api('/learning/grade', {
-    method: 'POST',
-    headers: bearer(token),
     body: JSON.stringify({
+      code: exercise.code ?? null,
       exerciseId: exercise.id,
       exerciseType: exercise.type,
-      question: exercise.question,
-      code: exercise.code ?? null,
       explanation: exercise.explanation,
-      userAnswer,
+      question: exercise.question,
+      userAnswer
     }),
+    headers: bearer(token),
+    method: 'POST'
   })
 }
 
 export function getStudents(token: string): Promise<StudentSummary[]> {
   return api('/learning/admin/students', {
-    headers: bearer(token),
+    headers: bearer(token)
   })
 }
 
 export function getCourses(token: string): Promise<CourseSummary[]> {
   return api('/learning/admin/courses', {
-    headers: bearer(token),
+    headers: bearer(token)
   })
 }
 
@@ -123,12 +133,12 @@ export function createStudent(
   token: string,
   name: string,
   documentNumber: string,
-  allowedCourseIds: number[] = [],
+  allowedCourseIds: number[] = []
 ): Promise<CreatedStudent> {
   return api('/learning/admin/students', {
-    method: 'POST',
+    body: JSON.stringify({ allowedCourseIds, documentNumber, name }),
     headers: bearer(token),
-    body: JSON.stringify({ name, documentNumber, allowedCourseIds }),
+    method: 'POST'
   })
 }
 
@@ -159,46 +169,54 @@ export interface AdminExercise extends Exercise {
 
 export function addExercise(token: string, payload: AddExercisePayload): Promise<AdminExercise> {
   return api('/learning/admin/content/exercises', {
-    method: 'POST',
-    headers: bearer(token),
     body: JSON.stringify(payload),
+    headers: bearer(token),
+    method: 'POST'
   })
 }
 
 export function deleteExercise(token: string, slugId: string): Promise<void> {
   return api(`/learning/admin/content/exercises/${slugId}`, {
-    method: 'DELETE',
     headers: bearer(token),
+    method: 'DELETE'
   })
 }
 
-export function updateExercise(token: string, slugId: string, payload: Omit<AddExercisePayload, 'courseId' | 'phaseOrder'>): Promise<AdminExercise> {
+export function updateExercise(
+  token: string,
+  slugId: string,
+  payload: Omit<AddExercisePayload, 'courseId' | 'phaseOrder'>
+): Promise<AdminExercise> {
   return api(`/learning/admin/content/exercises/${slugId}`, {
-    method: 'PUT',
-    headers: bearer(token),
     body: JSON.stringify(payload),
+    headers: bearer(token),
+    method: 'PUT'
   })
 }
 
-export function updateLesson(token: string, slugId: string, payload: { title: string; blocksJson: string }): Promise<Lesson> {
+export function updateLesson(
+  token: string,
+  slugId: string,
+  payload: { title: string; blocksJson: string }
+): Promise<Lesson> {
   return api(`/learning/admin/content/lessons/${slugId}`, {
-    method: 'PUT',
-    headers: bearer(token),
     body: JSON.stringify(payload),
+    headers: bearer(token),
+    method: 'PUT'
   })
 }
 
 export function deleteLesson(token: string, slugId: string): Promise<void> {
   return api(`/learning/admin/content/lessons/${slugId}`, {
-    method: 'DELETE',
     headers: bearer(token),
+    method: 'DELETE'
   })
 }
 
 export function resetStudentProgress(token: string, studentId: number): Promise<void> {
   return api(`/learning/admin/students/${studentId}/reset-progress`, {
-    method: 'POST',
     headers: bearer(token),
+    method: 'POST'
   })
 }
 
@@ -216,7 +234,7 @@ export interface StudentProgressDetail {
 
 export function getStudentProgress(token: string, studentId: number): Promise<StudentProgressDetail> {
   return api(`/learning/admin/students/${studentId}/progress`, {
-    headers: bearer(token),
+    headers: bearer(token)
   })
 }
 
@@ -231,9 +249,9 @@ export interface CreateCoursePayload {
 
 export function createCourse(token: string, payload: CreateCoursePayload): Promise<CourseSummary> {
   return api('/learning/admin/courses', {
-    method: 'POST',
-    headers: bearer(token),
     body: JSON.stringify(payload),
+    headers: bearer(token),
+    method: 'POST'
   })
 }
 
@@ -246,9 +264,9 @@ export interface CreatePhasePayload {
 
 export function createPhase(token: string, payload: CreatePhasePayload): Promise<Phase> {
   return api('/learning/admin/phases', {
-    method: 'POST',
-    headers: bearer(token),
     body: JSON.stringify(payload),
+    headers: bearer(token),
+    method: 'POST'
   })
 }
 
@@ -261,9 +279,9 @@ export interface AddLessonPayload {
 
 export function addLesson(token: string, payload: AddLessonPayload): Promise<Lesson> {
   return api('/learning/admin/content/lessons', {
-    method: 'POST',
-    headers: bearer(token),
     body: JSON.stringify(payload),
+    headers: bearer(token),
+    method: 'POST'
   })
 }
 
@@ -279,17 +297,17 @@ export interface UpdateCoursePayload {
 
 export function updateCourse(token: string, id: number, payload: UpdateCoursePayload): Promise<CourseSummary> {
   return api(`/learning/admin/courses/${id}`, {
-    method: 'PUT',
-    headers: bearer(token),
     body: JSON.stringify(payload),
+    headers: bearer(token),
+    method: 'PUT'
   })
 }
 
 export function updatePhase(token: string, id: number, payload: { name: string; icon: string }): Promise<void> {
   return api(`/learning/admin/phases/${id}`, {
-    method: 'PUT',
-    headers: bearer(token),
     body: JSON.stringify(payload),
+    headers: bearer(token),
+    method: 'PUT'
   })
 }
 
@@ -302,41 +320,39 @@ export interface UpdateStudentPayload {
 
 export function updateStudent(token: string, id: number, payload: UpdateStudentPayload): Promise<StudentSummary> {
   return api(`/learning/admin/students/${id}`, {
-    method: 'PUT',
-    headers: bearer(token),
     body: JSON.stringify(payload),
+    headers: bearer(token),
+    method: 'PUT'
   })
 }
 
 export function deleteStudent(token: string, id: number): Promise<void> {
   return api(`/learning/admin/students/${id}`, {
-    method: 'DELETE',
     headers: bearer(token),
+    method: 'DELETE'
   })
 }
 
 export function toggleStudentActive(token: string, id: number): Promise<StudentSummary> {
   return api(`/learning/admin/students/${id}/toggle`, {
-    method: 'PATCH',
     headers: bearer(token),
+    method: 'PATCH'
   })
 }
 
 export function deleteCourse(token: string, id: number): Promise<void> {
   return api(`/learning/admin/courses/${id}`, {
-    method: 'DELETE',
     headers: bearer(token),
+    method: 'DELETE'
   })
 }
 
 export function deletePhase(token: string, id: number): Promise<void> {
   return api(`/learning/admin/phases/${id}`, {
-    method: 'DELETE',
     headers: bearer(token),
+    method: 'DELETE'
   })
 }
-
-// ── Onboarding (student) ───────────────────────────────────────────────────────
 
 export function getOnboardingQuestions(token: string): Promise<OnboardingQuestion[]> {
   return api('/learning/onboarding/questions', { headers: bearer(token) })
@@ -349,17 +365,15 @@ export interface OnboardingAnswerItem {
 
 export function submitOnboarding(token: string, answers: OnboardingAnswerItem[]): Promise<StudentRoadmapResult> {
   return api('/learning/onboarding/submit', {
-    method: 'POST',
-    headers: bearer(token),
     body: JSON.stringify({ answers }),
+    headers: bearer(token),
+    method: 'POST'
   })
 }
 
 export function getRoadmap(token: string): Promise<StudentRoadmapResult> {
   return api('/learning/onboarding/roadmap', { headers: bearer(token) })
 }
-
-// ── Onboarding (admin) ────────────────────────────────────────────────────────
 
 export function getAdminOnboardingQuestions(token: string): Promise<OnboardingQuestion[]> {
   return api('/learning/admin/onboarding/questions', { headers: bearer(token) })
@@ -372,11 +386,14 @@ export interface CreateOnboardingQuestionPayload {
   options: string[]
 }
 
-export function createOnboardingQuestion(token: string, payload: CreateOnboardingQuestionPayload): Promise<OnboardingQuestion> {
+export function createOnboardingQuestion(
+  token: string,
+  payload: CreateOnboardingQuestionPayload
+): Promise<OnboardingQuestion> {
   return api('/learning/admin/onboarding/questions', {
-    method: 'POST',
-    headers: bearer(token),
     body: JSON.stringify(payload),
+    headers: bearer(token),
+    method: 'POST'
   })
 }
 
@@ -387,20 +404,23 @@ export interface UpdateOnboardingQuestionPayload {
   options: string[]
 }
 
-export function updateOnboardingQuestion(token: string, id: number, payload: UpdateOnboardingQuestionPayload): Promise<OnboardingQuestion> {
+export function updateOnboardingQuestion(
+  token: string,
+  id: number,
+  payload: UpdateOnboardingQuestionPayload
+): Promise<OnboardingQuestion> {
   return api(`/learning/admin/onboarding/questions/${id}`, {
-    method: 'PUT',
-    headers: bearer(token),
     body: JSON.stringify(payload),
+    headers: bearer(token),
+    method: 'PUT'
   })
 }
 
 export function deleteOnboardingQuestion(token: string, id: number): Promise<void> {
   return api(`/learning/admin/onboarding/questions/${id}`, {
-    method: 'DELETE',
     headers: bearer(token),
+    method: 'DELETE'
   })
 }
 
-// Re-export for convenience
 export type { Course, CourseSummary, Phase, Lesson, Exercise, Progress, OnboardingQuestion, StudentRoadmapResult }

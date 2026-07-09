@@ -4,19 +4,13 @@ import type { Course, Progress } from '@/types/learning'
 import { fetchContent, fetchProgress, studentLogin } from '@/services/backend'
 
 interface WelcomeScreenProps {
-  onEnter: (
-    token: string,
-    name: string,
-    progress: Progress,
-    allowedCourseIds: number[],
-    courses: Course[]
-  ) => void
+  onEnter: (token: string, name: string, progress: Progress, allowedCourseIds: number[], courses: Course[]) => void
 }
 
 const features = [
   { icon: '⚡', label: 'Múltiples cursos', text: 'Accedé a todos los cursos habilitados para tu perfil' },
   { icon: '🤖', label: 'IA integrada', text: 'Auto-calificación instantánea con Claude AI' },
-  { icon: '💻', label: 'Práctico', text: 'Editor de código interactivo en cada ejercicio' },
+  { icon: '💻', label: 'Práctico', text: 'Editor de código interactivo en cada ejercicio' }
 ]
 
 export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
@@ -51,55 +45,48 @@ export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
   }
 
   return (
-    <div className='relative flex min-h-screen overflow-hidden' style={{ background: 'var(--bg-base)' }}>
-      {/* Ambient background orbs */}
+    <div className='bg-surface relative flex min-h-screen overflow-hidden'>
       <div className='pointer-events-none absolute inset-0 overflow-hidden'>
         <div
           style={{
+            background: 'radial-gradient(circle, var(--primary-glow) 0%, transparent 65%)',
+            filter: 'blur(64px)',
+            height: '700px',
+            left: '10%',
             position: 'absolute',
             top: '-15%',
-            left: '10%',
-            width: '700px',
-            height: '700px',
-            background: 'radial-gradient(circle, rgba(171,157,242,0.11) 0%, transparent 65%)',
-            filter: 'blur(64px)'
+            width: '700px'
           }}
         />
         <div
           style={{
-            position: 'absolute',
+            background: 'radial-gradient(circle, var(--accent-glow) 0%, transparent 65%)',
             bottom: '-5%',
-            right: '5%',
-            width: '500px',
+            filter: 'blur(64px)',
             height: '500px',
-            background: 'radial-gradient(circle, rgba(120,220,232,0.08) 0%, transparent 65%)',
-            filter: 'blur(64px)'
+            position: 'absolute',
+            right: '5%',
+            width: '500px'
           }}
         />
         <div
           style={{
+            background: 'radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 65%)',
+            filter: 'blur(64px)',
+            height: '380px',
+            left: '-8%',
             position: 'absolute',
             top: '55%',
-            left: '-8%',
-            width: '380px',
-            height: '380px',
-            background: 'radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 65%)',
-            filter: 'blur(64px)'
+            width: '380px'
           }}
         />
       </div>
 
-      {/* Theme toggle */}
       <div className='absolute top-5 right-5 z-20'>
         <ThemeToggle />
       </div>
 
-      {/* ── Left hero panel (lg+) ── */}
-      <div
-        className='relative z-10 hidden flex-1 flex-col justify-between px-14 py-12 lg:flex'
-        style={{ borderRight: '1px solid var(--border-subtle)' }}
-      >
-        {/* Logo */}
+      <div className='border-hairline relative z-10 hidden flex-1 flex-col justify-between border-r px-14 py-12 lg:flex'>
         <div className='flex items-center gap-3'>
           <div
             className='flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-xl'
@@ -108,94 +95,64 @@ export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
             🎓
           </div>
           <div>
-            <div className='text-sm leading-tight font-black' style={{ color: 'var(--text-1)' }}>
-              Learning Platform
-            </div>
-            <div className='text-xs leading-tight' style={{ color: 'var(--text-3)' }}>
-              .NET · React · TypeScript
-            </div>
+            <div className='text-fg text-sm leading-tight font-semibold'>Learning Platform</div>
+            <div className='text-fg-subtle text-xs leading-tight'>.NET · React · TypeScript</div>
           </div>
         </div>
 
-        {/* Main hero content */}
         <div>
           <div className='mb-5 flex items-center gap-2.5'>
-            <div className='h-px w-6' style={{ background: 'var(--grad)' }} />
-            <span className='text-xs font-bold tracking-widest uppercase' style={{ color: 'var(--primary)' }}>
-              Cursos intensivos
-            </span>
+            <div className='bg-grad h-px w-6' />
+            <span className='text-primary text-xs font-bold tracking-widest uppercase'>Cursos intensivos</span>
           </div>
 
           <h1
-            className='mb-5 leading-[1.05] font-black'
-            style={{ fontSize: '3.5rem', letterSpacing: '-0.04em', color: 'var(--text-1)' }}
+            className='mb-5 leading-[1.05] font-semibold'
+            style={{ color: 'var(--text-1)', fontSize: '3.5rem', letterSpacing: '-0.04em' }}
           >
-            Aprendé<br />
+            Aprendé
+            <br />
             programación <span className='grad-text'>práctica</span>
           </h1>
 
-          <p className='mb-10 text-base leading-relaxed' style={{ color: 'var(--text-2)', maxWidth: '420px' }}>
-            Ejercicios interactivos, retroalimentación con IA y seguimiento de tu progreso.
-            Todo lo que necesitás para avanzar como desarrollador.
+          <p className='text-fg-muted mb-10 max-w-[420px] text-base leading-relaxed'>
+            Ejercicios interactivos, retroalimentación con IA y seguimiento de tu progreso. Todo lo que necesitás para
+            avanzar como desarrollador.
           </p>
 
-          {/* Stats strip */}
-          <div
-            className='mb-10 flex items-center gap-8 pb-10'
-            style={{ borderBottom: '1px solid var(--border-subtle)' }}
-          >
+          <div className='border-hairline mb-10 flex items-center gap-8 border-b pb-10'>
             {[
-              { v: 'IA', l: 'Calificación' },
-              { v: 'Live', l: 'Feedback' },
-              { v: '100%', l: 'Online' },
+              { l: 'Calificación', v: 'IA' },
+              { l: 'Feedback', v: 'Live' },
+              { l: 'Online', v: '100%' }
             ].map((s, i) => (
               <div key={i}>
-                <div
-                  className='font-mono leading-none font-black'
-                  style={{ fontSize: '1.75rem', color: 'var(--text-1)' }}
-                >
-                  {s.v}
-                </div>
-                <div className='mt-1 text-xs' style={{ color: 'var(--text-3)' }}>
-                  {s.l}
-                </div>
+                <div className='text-fg font-mono text-[1.75rem] leading-none font-semibold'>{s.v}</div>
+                <div className='text-fg-subtle mt-1 text-xs'>{s.l}</div>
               </div>
             ))}
           </div>
 
-          {/* Feature list */}
           <div className='space-y-3.5'>
             {features.map((f, i) => (
               <div key={i} className='flex items-center gap-3.5'>
-                <div
-                  className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-base'
-                  style={{ background: 'rgba(171,157,242,0.10)', border: '1px solid var(--border-default)' }}
-                >
+                <div className='border-line bg-primary-glow flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border text-base'>
                   {f.icon}
                 </div>
                 <div>
-                  <div className='text-xs leading-tight font-bold' style={{ color: 'var(--text-1)' }}>
-                    {f.label}
-                  </div>
-                  <div className='mt-0.5 text-xs leading-tight' style={{ color: 'var(--text-3)' }}>
-                    {f.text}
-                  </div>
+                  <div className='text-fg text-xs leading-tight font-bold'>{f.label}</div>
+                  <div className='text-fg-subtle mt-0.5 text-xs leading-tight'>{f.text}</div>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Footer */}
-        <div className='text-xs' style={{ color: 'var(--text-3)' }}>
-          Plataforma de aprendizaje interno &middot; v3.0
-        </div>
+        <div className='text-fg-subtle text-xs'>Plataforma de aprendizaje interno &middot; v3.0</div>
       </div>
 
-      {/* ── Right form panel ── */}
       <div className='relative z-10 flex flex-1 items-center justify-center p-8 lg:max-w-120'>
         <div className='animate-fade-up w-full max-w-95'>
-          {/* Mobile logo */}
           <div className='mb-10 flex items-center gap-2.5 lg:hidden'>
             <div
               className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-base'
@@ -204,38 +161,27 @@ export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
               🎓
             </div>
             <div>
-              <div className='text-sm leading-tight font-black' style={{ color: 'var(--text-1)' }}>
-                Learning Platform
-              </div>
-              <div className='text-xs leading-tight' style={{ color: 'var(--text-3)' }}>
-                .NET · React · TypeScript
-              </div>
+              <div className='text-fg text-sm leading-tight font-semibold'>Learning Platform</div>
+              <div className='text-fg-subtle text-xs leading-tight'>.NET · React · TypeScript</div>
             </div>
           </div>
 
-          {/* Login card */}
-          <div
-            className='rounded-2xl p-8'
-            style={{
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border-default)',
-              boxShadow: 'var(--shadow-float)'
-            }}
-          >
+          <div className='bg-card border-line shadow-float rounded-2xl border p-8'>
             <div className='mb-7'>
-              <h2 className='mb-2 text-2xl font-black' style={{ color: 'var(--text-1)', letterSpacing: '-0.025em' }}>
+              <h2
+                className='mb-2 font-serif text-2xl font-normal'
+                style={{ color: 'var(--text-1)', letterSpacing: '-0.025em' }}
+              >
                 Ingresar a la plataforma
               </h2>
-              <p className='text-sm leading-relaxed' style={{ color: 'var(--text-2)' }}>
+              <p className='text-fg-muted text-sm leading-relaxed'>
                 Usá la llave de acceso que te proporcionó tu instructor.
               </p>
             </div>
 
             <div className='space-y-4'>
               <div>
-                <label className='mb-1.5 block text-xs font-semibold' style={{ color: 'var(--text-2)' }}>
-                  Llave de acceso
-                </label>
+                <label className='text-fg-muted mb-1.5 block text-xs font-semibold'>Llave de acceso</label>
                 <DarkInput
                   value={key}
                   onChange={(e) => {
@@ -246,14 +192,7 @@ export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
                   onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
                 />
                 {error && (
-                  <div
-                    className='mt-2 rounded-lg px-3 py-2 text-xs leading-relaxed'
-                    style={{
-                      background: 'var(--danger-bg)',
-                      border: '1px solid var(--danger-border)',
-                      color: '#ffb3c6'
-                    }}
-                  >
+                  <div className='bg-danger-bg border-danger-border text-danger mt-2 rounded-lg border px-3 py-2 text-xs leading-relaxed'>
                     {error}
                   </div>
                 )}
@@ -264,16 +203,9 @@ export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
               </PrimaryBtn>
             </div>
 
-            <p className='mt-6 text-center text-xs' style={{ color: 'var(--text-3)' }}>
+            <p className='text-fg-subtle mt-6 text-center text-xs'>
               Formato:{' '}
-              <span
-                className='rounded-md px-1.5 py-0.5 font-mono'
-                style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  color: 'var(--text-2)',
-                  border: '1px solid var(--border-subtle)'
-                }}
-              >
+              <span className='text-fg-muted border-hairline bg-tint rounded-md border px-1.5 py-0.5 font-mono'>
                 NET-XXXXXXXX
               </span>
             </p>

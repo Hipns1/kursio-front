@@ -3,33 +3,17 @@
 export function NotFound() {
   const navigate = useNavigate()
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-6"
-      style={{ background: 'var(--bg-base)' }}
-    >
-      <div className="text-center">
-        <div
-          className="w-20 h-20 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-6"
-          style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
-        >
+    <div className='bg-surface flex min-h-screen items-center justify-center p-6'>
+      <div className='text-center'>
+        <div className='bg-card border-hairline mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl border font-serif text-4xl font-normal'>
           🗺️
         </div>
-        <p
-          className="font-black text-6xl font-mono mb-2 leading-none"
-          style={{ color: 'var(--text-1)' }}
-        >
-          404
-        </p>
-        <p className="font-bold text-base mb-1" style={{ color: 'var(--text-1)' }}>
-          Página no encontrada
-        </p>
-        <p className="text-sm mb-8" style={{ color: 'var(--text-3)' }}>
-          La ruta que buscás no existe o fue movida.
-        </p>
+        <p className='text-fg mb-2 font-mono font-serif text-6xl leading-none font-normal'>404</p>
+        <p className='text-fg mb-1 text-base font-bold'>Página no encontrada</p>
+        <p className='text-fg-subtle mb-8 text-sm'>La ruta que buscás no existe o fue movida.</p>
         <button
           onClick={() => navigate('/', { replace: true })}
-          className="px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-80"
-          style={{ background: 'linear-gradient(135deg,#ab9df2,#78dce8)' }}
+          className='rounded-xl bg-[var(--grad)] px-6 py-2.5 text-sm font-bold text-white transition-all hover:opacity-80'
         >
           ← Volver al inicio
         </button>

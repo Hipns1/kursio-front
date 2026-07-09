@@ -29,15 +29,15 @@ interface ExercisesTabProps {
 }
 
 export function ExercisesTab({
-  phaseId,
-  phase,
-  progress,
   onAnswer,
-  studentToken,
-  onGrade,
-  onNextPhase,
   onBack,
   onGoToLastLesson,
+  onGrade,
+  onNextPhase,
+  phase,
+  phaseId,
+  progress,
+  studentToken
 }: ExercisesTabProps) {
   const exercises = getPhaseExercises(phaseId)
   const firstUnanswered = exercises.findIndex((e) => !progress[e.id])
@@ -54,93 +54,92 @@ export function ExercisesTab({
     setIdx(first !== -1 ? first : 0)
   }, [phaseId])
 
+  if (exercises.length === 0) {
+    return (
+      <div className='bg-surface flex min-h-screen flex-col'>
+        <div className='bg-nav border-hairline flex items-center border-b px-5 py-3.5 backdrop-blur-[20px]'>
+          <button
+            onClick={onBack}
+            className='text-fg-muted flex items-center gap-1.5 text-sm font-medium transition-all hover:opacity-70'
+          >
+            ← Volver
+          </button>
+        </div>
+        <div className='flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center'>
+          <span className='font-serif text-4xl font-normal'>🏗️</span>
+          <p className='text-fg text-lg font-bold'>Esta fase todavía no tiene ejercicios</p>
+          <p className='text-fg-subtle text-sm'>Revisá la teoría y volvé más adelante.</p>
+          <button
+            onClick={onNextPhase}
+            className='bg-grad text-on-primary rounded-xl px-5 py-2.5 text-sm font-bold transition-all hover:opacity-90'
+          >
+            Continuar
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   const ex = exercises[idx]
-  const progressPct = exercises.length > 0 ? Math.round(((idx + 1) / exercises.length) * 100) : 100
+  const progressPct = Math.round(((idx + 1) / exercises.length) * 100)
   const isCurrentAnswered = !!progress[ex.id]
   const allAnswered = exercises.every((e) => !!progress[e.id])
   const pendingReview = exercises.filter((e) => {
     const s = progress[e.id] as ExerciseRecord | undefined
-    return s && s.autoCorrect === null && !s.claudeFeedback
+    return s?.autoCorrect === null && !s.claudeFeedback
   }).length
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg-base)' }}>
-      {/* Progress bar */}
-      <div className="h-0.5 w-full" style={{ background: 'rgba(255,255,255,0.06)' }}>
+    <div className='bg-surface flex min-h-screen flex-col'>
+      <div className='bg-tint-strong h-0.5 w-full'>
         <div
-          className="h-full transition-all duration-500"
+          className='h-full transition-all duration-500'
           style={{
-            width: `${progressPct}%`,
-            background: 'linear-gradient(90deg,#ab9df2,#8b5cf6)',
+            background: 'var(--grad)',
+            width: `${progressPct}%`
           }}
         />
       </div>
 
-      {/* Nav */}
-      <div
-        className="px-5 py-3.5 flex items-center justify-between"
-        style={{
-          background: 'var(--nav-bg)',
-          borderBottom: '1px solid var(--border-subtle)',
-          backdropFilter: 'blur(20px)',
-        }}
-      >
+      <div className='bg-nav border-hairline flex items-center justify-between border-b px-5 py-3.5 backdrop-blur-[20px]'>
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 text-sm font-medium transition-all hover:opacity-70"
-          style={{ color: 'var(--text-2)' }}
+          className='text-fg-muted flex items-center gap-1.5 text-sm font-medium transition-all hover:opacity-70'
         >
           ← Volver
         </button>
-        <div className="flex items-center gap-3">
+        <div className='flex items-center gap-3'>
           {pendingReview > 0 && (
-            <span
-              className="text-xs font-semibold px-2 py-0.5 rounded-full"
-              style={{
-                background: 'var(--warning-bg)',
-                color: '#ffd866',
-                border: '1px solid rgba(255,216,102,0.20)',
-              }}
-            >
+            <span className='bg-warning-bg border-warning-border text-warning rounded-full border px-2 py-0.5 text-xs font-semibold'>
               🤖 {pendingReview} por revisar
             </span>
           )}
-          <span className="text-sm font-semibold" style={{ color: '#a78bfa' }}>
+          <span className='text-primary text-sm font-semibold'>
             🏆 Ejercicio {idx + 1} de {exercises.length}
           </span>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="px-4 py-6 max-w-2xl mx-auto w-full">
-          {/* Breadcrumb */}
-          <p
-            className="text-xs font-bold uppercase tracking-widest mb-4"
-            style={{ color: 'var(--text-3)' }}
-          >
+      <div className='flex-1 overflow-y-auto'>
+        <div className='mx-auto w-full max-w-2xl px-4 py-6'>
+          <p className='text-fg-subtle mb-4 text-xs font-bold tracking-widest uppercase'>
             FASE {phaseId} · {phase?.name}
           </p>
 
-          {/* Exercise card */}
           <div
             key={ex.id}
             className={`rounded-2xl p-5 ${slideDir === 'right' ? 'animate-slide-right' : 'animate-slide-left'}`}
             style={{
               background: 'var(--bg-card)',
               border: '1px solid var(--border-subtle)',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.30)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.30)'
             }}
           >
-            <div className="flex items-center gap-2 mb-3">
+            <div className='mb-3 flex items-center gap-2'>
               <TypeBadge type={ex.type} />
-              <span className="text-xs font-mono" style={{ color: 'var(--text-3)' }}>
-                {ex.id}
-              </span>
+              <span className='text-fg-subtle font-mono text-xs'>{ex.id}</span>
             </div>
-            <p className="text-sm font-medium mb-4 leading-relaxed" style={{ color: 'var(--text-1)' }}>
-              {ex.question}
-            </p>
+            <p className='text-fg mb-4 text-sm leading-relaxed font-medium'>{ex.question}</p>
             {ex.code && ex.type !== 'complete-code' && <CodeBlock code={ex.code} />}
 
             {ex.type === 'multiple-choice' && (
@@ -195,32 +194,18 @@ export function ExercisesTab({
         </div>
       </div>
 
-      {/* Bottom nav */}
-      <div
-        className="sticky bottom-0 px-4 py-3.5 flex items-center justify-between gap-3"
-        style={{
-          background: 'var(--nav-bg)',
-          borderTop: '1px solid var(--border-subtle)',
-          backdropFilter: 'blur(20px)',
-        }}
-      >
+      <div className='bg-nav border-hairline sticky bottom-0 flex items-center justify-between gap-3 border-t px-4 py-3.5 backdrop-blur-[20px]'>
         <button
           onClick={() => (idx === 0 ? onGoToLastLesson() : goTo(idx - 1))}
-          className="px-5 py-2.5 rounded-xl text-sm font-medium transition-all hover:opacity-80"
-          style={{
-            background: 'var(--bg-elevated)',
-            border: '1px solid var(--border-subtle)',
-            color: 'var(--text-2)',
-          }}
+          className='bg-elevated border-hairline text-fg-muted rounded-xl border px-5 py-2.5 text-sm font-medium transition-all hover:opacity-80'
         >
           ← Anterior
         </button>
 
-        {/* Dot indicators */}
-        <div className="flex gap-1.5 items-center">
+        <div className='flex items-center gap-1.5'>
           {exercises.map((e, i) => {
             const s = progress[e.id] as ExerciseRecord | undefined
-            const isPending = s && s.autoCorrect === null && !s.claudeFeedback
+            const isPending = s?.autoCorrect === null && !s.claudeFeedback
             const isGraded = s && (s.autoCorrect !== null || s.claudeFeedback)
             return (
               <button
@@ -229,20 +214,20 @@ export function ExercisesTab({
                   const canJump = i <= idx || !!progress[exercises[i].id]
                   if (canJump) goTo(i)
                 }}
-                className="rounded-full transition-all"
+                className='rounded-full transition-all'
                 style={{
-                  width: i === idx ? 20 : 8,
-                  height: 8,
                   background:
                     i === idx
-                      ? '#ab9df2'
+                      ? 'var(--primary)'
                       : isPending
                         ? 'var(--warning)'
                         : isGraded
                           ? 'var(--success)'
-                          : 'rgba(255,255,255,0.12)',
+                          : 'var(--tint-2)',
                   cursor: i <= idx || !!progress[exercises[i].id] ? 'pointer' : 'not-allowed',
+                  height: 8,
                   opacity: i > idx && !progress[exercises[i].id] ? 0.4 : 1,
+                  width: i === idx ? 20 : 8
                 }}
               />
             )
@@ -254,12 +239,12 @@ export function ExercisesTab({
             onClick={() => isCurrentAnswered && goTo(idx + 1)}
             disabled={!isCurrentAnswered}
             title={!isCurrentAnswered ? 'Respondé este ejercicio para continuar' : undefined}
-            className="px-5 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:opacity-90"
+            className='rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-all hover:opacity-90'
             style={{
               background: 'var(--grad)',
               boxShadow: isCurrentAnswered ? '0 4px 14px var(--primary-glow)' : 'none',
-              opacity: isCurrentAnswered ? 1 : 0.35,
               cursor: isCurrentAnswered ? 'pointer' : 'not-allowed',
+              opacity: isCurrentAnswered ? 1 : 0.35
             }}
           >
             Siguiente →
@@ -269,12 +254,12 @@ export function ExercisesTab({
             onClick={() => allAnswered && onNextPhase()}
             disabled={!allAnswered}
             title={!allAnswered ? 'Completá todos los ejercicios para continuar' : undefined}
-            className="px-5 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:opacity-90"
+            className='rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-all hover:opacity-90'
             style={{
-              background: 'linear-gradient(135deg,#a9dc76,#75a73e)',
-              boxShadow: allAnswered ? '0 4px 14px rgba(169,220,118,0.30)' : 'none',
-              opacity: allAnswered ? 1 : 0.35,
+              background: 'var(--grad-success)',
+              boxShadow: allAnswered ? '0 4px 14px var(--success-border)' : 'none',
               cursor: allAnswered ? 'pointer' : 'not-allowed',
+              opacity: allAnswered ? 1 : 0.35
             }}
           >
             {phaseId + 1 < PHASES.length ? 'Siguiente Fase →' : '🏁 Ver resumen →'}

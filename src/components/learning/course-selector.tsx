@@ -20,20 +20,17 @@ function UserAvatar({ name }: { name: string }) {
     .map((w) => w[0]?.toUpperCase() ?? '')
     .join('')
   return (
-    <div
-      className="w-9 h-9 rounded-full flex items-center justify-center font-black text-sm shrink-0 select-none"
-      style={{ background: 'var(--grad)', color: '#fff' }}
-    >
+    <div className='bg-grad text-on-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold select-none'>
       {initials || '?'}
     </div>
   )
 }
 
 function CourseCard({
+  barMounted,
   course,
   courses,
-  progress,
-  barMounted,
+  progress
 }: {
   course: CourseSummary
   courses: CourseSummary[]
@@ -55,71 +52,62 @@ function CourseCard({
   return (
     <button
       onClick={() => navigate(`/course/${course.slug}`)}
-      className="w-full text-left rounded-2xl overflow-hidden transition-all hover:scale-[1.01]"
+      className='w-full overflow-hidden rounded-2xl text-left transition-all hover:scale-[1.01]'
       style={{
         background: 'var(--bg-card)',
         border: `1px solid ${isComplete ? 'rgba(34,197,94,0.30)' : 'var(--border-subtle)'}`,
-        boxShadow: 'var(--shadow-card)',
+        boxShadow: 'var(--shadow-panel)'
       }}
     >
-      {/* Color header */}
       <div
-        className="px-5 py-4 flex items-center gap-3"
-        style={{ background: `linear-gradient(135deg, ${course.color}22 0%, ${course.color}08 100%)`, borderBottom: `1px solid ${course.color}20` }}
+        className='flex items-center gap-3 px-5 py-4'
+        style={{
+          background: `linear-gradient(135deg, ${course.color}22 0%, ${course.color}08 100%)`,
+          borderBottom: `1px solid ${course.color}20`
+        }}
       >
         <div
-          className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl shrink-0 overflow-hidden"
+          className='flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl font-serif text-2xl font-normal'
           style={{ background: `${course.color}25`, border: `1px solid ${course.color}40` }}
         >
-          <CourseIcon icon={course.icon} className="w-11 h-11" />
+          <CourseIcon icon={course.icon} className='h-11 w-11' />
         </div>
-        <div className="min-w-0 flex-1">
-          <div className="font-black text-base leading-snug truncate" style={{ color: 'var(--text-1)' }}>
-            {course.name}
-          </div>
-          {isComplete && (
-            <span
-              className="text-xs font-bold"
-              style={{ color: '#22c55e' }}
-            >
-              ✓ Completado
-            </span>
-          )}
-          {!isComplete && hasProgress && (
-            <span className="text-xs" style={{ color: 'var(--text-3)' }}>En progreso</span>
-          )}
-          {!isComplete && !hasProgress && (
-            <span className="text-xs" style={{ color: 'var(--text-3)' }}>Sin iniciar</span>
-          )}
+        <div className='min-w-0 flex-1'>
+          <div className='text-fg truncate text-base leading-snug font-semibold'>{course.name}</div>
+          {isComplete && <span className='text-success text-xs font-bold'>✓ Completado</span>}
+          {!isComplete && hasProgress && <span className='text-fg-subtle text-xs'>En progreso</span>}
+          {!isComplete && !hasProgress && <span className='text-fg-subtle text-xs'>Sin iniciar</span>}
         </div>
-        <div className="text-right shrink-0">
-          <div className="font-black text-xl font-mono leading-none" style={{ color: isComplete ? '#22c55e' : 'var(--text-1)' }}>
+        <div className='shrink-0 text-right'>
+          <div
+            className='font-mono text-xl leading-none font-semibold'
+            style={{ color: isComplete ? 'var(--success)' : 'var(--text-1)' }}
+          >
             {pct}%
           </div>
         </div>
       </div>
 
-      {/* Stats + progress */}
-      <div className="px-5 py-4">
-        {course.description && (
-          <p className="text-xs mb-3 leading-relaxed" style={{ color: 'var(--text-3)' }}>
-            {course.description}
-          </p>
-        )}
+      <div className='px-5 py-4'>
+        {course.description && <p className='text-fg-subtle mb-3 text-xs leading-relaxed'>{course.description}</p>}
 
         {course.prerequisites && course.prerequisites.length > 0 && (
-          <div className="mb-3 flex flex-wrap gap-1.5 items-center">
-            <span className="text-xs shrink-0" style={{ color: 'var(--text-3)' }}>Antes:</span>
+          <div className='mb-3 flex flex-wrap items-center gap-1.5'>
+            <span className='text-fg-subtle shrink-0 text-xs'>Antes:</span>
             {course.prerequisites.map((slug) => {
               const prereq = courses.find((c) => c.slug === slug)
               if (!prereq) return null
               return (
                 <span
                   key={slug}
-                  className="text-xs px-1.5 py-0.5 rounded-md font-medium flex items-center gap-1"
-                  style={{ background: `${prereq.color}18`, border: `1px solid ${prereq.color}35`, color: prereq.color }}
+                  className='flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs font-medium'
+                  style={{
+                    background: `${prereq.color}18`,
+                    border: `1px solid ${prereq.color}35`,
+                    color: prereq.color
+                  }}
                 >
-                  <CourseIcon icon={prereq.icon} size={12} className="rounded shrink-0" />
+                  <CourseIcon icon={prereq.icon} size={12} className='shrink-0 rounded' />
                   {prereq.name}
                 </span>
               )
@@ -127,27 +115,27 @@ function CourseCard({
           </div>
         )}
 
-        <div className="flex items-center gap-4 mb-3">
-          <span className="text-xs px-2 py-0.5 rounded-md" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-subtle)', color: 'var(--text-2)' }}>
+        <div className='mb-3 flex items-center gap-4'>
+          <span className='border-hairline text-fg-muted bg-tint rounded-md border px-2 py-0.5 text-xs'>
             📚 {readLs}/{courseLessons.length} lecciones
           </span>
-          <span className="text-xs px-2 py-0.5 rounded-md" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-subtle)', color: 'var(--text-2)' }}>
+          <span className='border-hairline text-fg-muted bg-tint rounded-md border px-2 py-0.5 text-xs'>
             💻 {answeredEx}/{courseExercises.length} ejercicios
           </span>
         </div>
 
-        <div className="w-full h-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.06)' }}>
+        <div className='bg-tint-strong h-1.5 w-full rounded-full'>
           <div
-            className="h-1.5 rounded-full"
+            className='h-1.5 rounded-full'
             style={{
-              width: barMounted ? `${pct}%` : '0%',
-              background: isComplete ? '#22c55e' : course.color,
+              background: isComplete ? 'var(--success)' : course.color,
               transition: 'width 1s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              width: barMounted ? `${pct}%` : '0%'
             }}
           />
         </div>
 
-        <div className="mt-3 text-xs font-bold" style={{ color: isComplete ? '#22c55e' : course.color }}>
+        <div className='mt-3 text-xs font-bold' style={{ color: isComplete ? 'var(--success)' : course.color }}>
           {isComplete ? '✓ Completado' : hasProgress ? 'Continuar →' : 'Comenzar →'}
         </div>
       </div>
@@ -156,12 +144,12 @@ function CourseCard({
 }
 
 export function CourseSelectorScreen({
-  username,
   courses,
-  progress,
   hasRoadmap,
   onRoadmap,
   onSettings,
+  progress,
+  username
 }: CourseSelectorScreenProps) {
   const [barMounted, setBarMounted] = useState(false)
   const [search, setSearch] = useState('')
@@ -171,45 +159,34 @@ export function CourseSelectorScreen({
     return () => clearTimeout(t)
   }, [])
 
-  const filteredCourses = courses.filter((c) =>
-    search.trim() === '' ||
-    c.name.toLowerCase().includes(search.toLowerCase()) ||
-    c.description?.toLowerCase().includes(search.toLowerCase())
+  const filteredCourses = courses.filter(
+    (c) =>
+      search.trim() === '' ||
+      c.name.toLowerCase().includes(search.toLowerCase()) ||
+      c.description?.toLowerCase().includes(search.toLowerCase())
   )
 
   const totalAnswered = Object.keys(progress).filter((k) => !k.startsWith('__')).length
   const totalLessonsRead = Object.keys(progress.__lessons || {}).length
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg-base)' }}>
-      {/* ── Nav ── */}
-      <nav
-        className="sticky top-0 z-10 px-5 py-4 flex items-center justify-between"
-        style={{
-          background: 'var(--nav-bg)',
-          borderBottom: '1px solid var(--border-subtle)',
-          backdropFilter: 'blur(20px)',
-        }}
-      >
+    <div className='bg-surface min-h-screen'>
+      <nav className='bg-nav border-hairline sticky top-0 z-10 flex items-center justify-between border-b px-5 py-4 backdrop-blur-[20px]'>
         <div>
-          <div className="font-black text-lg leading-tight" style={{ color: 'var(--text-1)' }}>
-            Mis Cursos
-          </div>
-          <div className="text-xs" style={{ color: 'var(--text-3)' }}>
-            Bienvenido de nuevo, {username}
-          </div>
+          <div className='text-fg text-lg leading-tight font-semibold'>Mis Cursos</div>
+          <div className='text-fg-subtle text-xs'>Bienvenido de nuevo, {username}</div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className='flex items-center gap-2'>
           <ThemeToggle />
           {hasRoadmap && (
             <button
               onClick={onRoadmap}
-              title="Mi Roadmap"
-              className="flex items-center gap-1.5 rounded-lg px-3 h-9 text-xs font-bold transition-all hover:opacity-80"
+              title='Mi Roadmap'
+              className='flex h-9 items-center gap-1.5 rounded-lg px-3 text-xs font-bold transition-all hover:opacity-80'
               style={{
                 background: 'var(--grad)',
-                color: '#fff',
                 boxShadow: '0 2px 8px var(--primary-glow)',
+                color: '#fff'
               }}
             >
               🗺️ Roadmap
@@ -217,9 +194,8 @@ export function CourseSelectorScreen({
           )}
           <button
             onClick={onSettings}
-            title="Configuración"
-            className="w-9 h-9 rounded-lg flex items-center justify-center transition-all hover:opacity-70"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-subtle)' }}
+            title='Configuración'
+            className='border-hairline bg-tint flex h-9 w-9 items-center justify-center rounded-lg border transition-all hover:opacity-70'
           >
             ⚙️
           </button>
@@ -227,76 +203,56 @@ export function CourseSelectorScreen({
         </div>
       </nav>
 
-      <div className="max-w-4xl mx-auto px-4 py-8 space-y-6 animate-fade-up">
-        {/* ── Summary strip ── */}
-        <div className="grid grid-cols-3 gap-3 stagger">
-          <div
-            className="rounded-2xl p-4 text-center"
-            style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
-          >
-            <div className="font-black text-2xl font-mono mb-0.5" style={{ color: 'var(--text-1)' }}>{courses.length}</div>
-            <div className="text-xs" style={{ color: 'var(--text-3)' }}>Cursos activos</div>
+      <div className='animate-fade-up mx-auto max-w-4xl space-y-6 px-4 py-8'>
+        <div className='stagger grid grid-cols-3 gap-3'>
+          <div className='bg-card border-hairline rounded-2xl border p-4 text-center'>
+            <div className='text-fg mb-0.5 font-mono font-serif text-2xl font-normal'>{courses.length}</div>
+            <div className='text-fg-subtle text-xs'>Cursos activos</div>
           </div>
-          <div
-            className="rounded-2xl p-4 text-center"
-            style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
-          >
-            <div className="font-black text-2xl font-mono mb-0.5" style={{ color: 'var(--text-1)' }}>{totalAnswered}</div>
-            <div className="text-xs" style={{ color: 'var(--text-3)' }}>Ejercicios resueltos</div>
+          <div className='bg-card border-hairline rounded-2xl border p-4 text-center'>
+            <div className='text-fg mb-0.5 font-mono font-serif text-2xl font-normal'>{totalAnswered}</div>
+            <div className='text-fg-subtle text-xs'>Ejercicios resueltos</div>
           </div>
-          <div
-            className="rounded-2xl p-4 text-center"
-            style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
-          >
-            <div className="font-black text-2xl font-mono mb-0.5" style={{ color: 'var(--text-1)' }}>{totalLessonsRead}</div>
-            <div className="text-xs" style={{ color: 'var(--text-3)' }}>Lecciones leídas</div>
+          <div className='bg-card border-hairline rounded-2xl border p-4 text-center'>
+            <div className='text-fg mb-0.5 font-mono font-serif text-2xl font-normal'>{totalLessonsRead}</div>
+            <div className='text-fg-subtle text-xs'>Lecciones leídas</div>
           </div>
         </div>
 
-        {/* ── Heading + search ── */}
-        <div className="space-y-3">
+        <div className='space-y-3'>
           <div>
-            <h2 className="font-black text-xl leading-tight" style={{ color: 'var(--text-1)' }}>
-              Seleccioná un curso
-            </h2>
-            <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>
-              Elegí el curso que querés continuar aprendiendo hoy.
-            </p>
+            <h2 className='text-fg text-xl leading-tight font-semibold'>Seleccioná un curso</h2>
+            <p className='text-fg-subtle mt-1 text-sm'>Elegí el curso que querés continuar aprendiendo hoy.</p>
           </div>
-          <div
-            className="flex items-center gap-2 rounded-xl px-4 py-2.5"
-            style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
-          >
-            <span style={{ color: 'var(--text-3)' }}>🔍</span>
+          <div className='bg-card border-hairline flex items-center gap-2 rounded-xl border px-4 py-2.5'>
+            <span className='text-fg-subtle'>🔍</span>
             <input
-              type="text"
+              type='text'
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar curso..."
-              className="flex-1 bg-transparent text-sm outline-none"
-              style={{ color: 'var(--text-1)' }}
+              placeholder='Buscar curso...'
+              className='text-fg flex-1 bg-transparent text-sm outline-none'
             />
             {search && (
-              <button onClick={() => setSearch('')} className="text-sm leading-none" style={{ color: 'var(--text-3)' }}>
+              <button onClick={() => setSearch('')} className='text-fg-subtle text-sm leading-none'>
                 ✕
               </button>
             )}
           </div>
         </div>
 
-        {/* ── Course grid ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
           {filteredCourses.map((course) => (
             <CourseCard key={course.id} course={course} courses={courses} progress={progress} barMounted={barMounted} />
           ))}
           {filteredCourses.length === 0 && search.trim() !== '' && (
-            <p className="col-span-2 py-8 text-center text-sm" style={{ color: 'var(--text-3)' }}>
+            <p className='text-fg-subtle col-span-2 py-8 text-center text-sm'>
               No se encontraron cursos para "{search}"
             </p>
           )}
         </div>
 
-        <div className="h-4" />
+        <div className='h-4' />
       </div>
     </div>
   )

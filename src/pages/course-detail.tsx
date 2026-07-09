@@ -10,28 +10,28 @@ import {
   getPhaseAvgScore,
   getPhaseExStats,
   getPhaseLsStats,
-  isPhaseUnlocked,
+  isPhaseUnlocked
 } from '@/utils/helpers/learning'
 import type { ExerciseRecord } from '@/types/learning'
 
-function ProgressBar({ pct, color }: { pct: number; color?: string }) {
-  const grad =
-    color === 'green'
-      ? 'linear-gradient(90deg,#a9dc76,#75a73e)'
-      : 'linear-gradient(90deg,#ab9df2,#78dce8)'
+function ProgressBar({ color, pct }: { pct: number; color?: string }) {
+  const grad = color === 'green' ? 'var(--grad-success)' : 'var(--grad)'
   return (
-    <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
-      <div className="h-1.5 rounded-full transition-all duration-700" style={{ width: `${pct}%`, background: grad }} />
+    <div className='bg-tint-strong h-1.5 w-full overflow-hidden rounded-full'>
+      <div className='h-1.5 rounded-full transition-all duration-700' style={{ background: grad, width: `${pct}%` }} />
     </div>
   )
 }
 
 function ScorePill({ score }: { score: number }) {
-  const color = score >= 80 ? '#6EE7B7' : score >= 50 ? '#ffd866' : '#ffb3c6'
-  const bg = score >= 80 ? 'rgba(169,220,118,0.12)' : score >= 50 ? 'rgba(255,216,102,0.12)' : 'rgba(255,97,136,0.12)'
-  const border = score >= 80 ? 'rgba(169,220,118,0.25)' : score >= 50 ? 'rgba(255,216,102,0.25)' : 'rgba(255,97,136,0.25)'
+  const color = score >= 80 ? 'var(--success)' : score >= 50 ? 'var(--warning)' : 'var(--danger)'
+  const bg = score >= 80 ? 'var(--success-bg)' : score >= 50 ? 'var(--warning-bg)' : 'var(--danger-bg)'
+  const border = score >= 80 ? 'var(--success-border)' : score >= 50 ? 'var(--warning-border)' : 'var(--danger-border)'
   return (
-    <span className="text-xs font-bold font-mono px-2 py-0.5 rounded-full" style={{ background: bg, color, border: `1px solid ${border}` }}>
+    <span
+      className='rounded-full px-2 py-0.5 font-mono text-xs font-bold'
+      style={{ background: bg, border: `1px solid ${border}`, color }}
+    >
       ⭐ {score}
     </span>
   )
@@ -42,25 +42,25 @@ export function CourseDetail() {
   const navigate = useNavigate()
 
   const {
-    username,
-    studentToken,
-    progress,
+    activeCourseSlug,
     contentVersion,
     courses,
-    activeCourseSlug,
-    setActiveCourse,
     forceContentReload,
+    progress,
+    setActiveCourse,
+    studentToken,
+    username
   } = useBoundStore(
     useShallow((s) => ({
-      username: s.username,
-      studentToken: s.studentToken,
-      progress: s.progress,
+      activeCourseSlug: s.activeCourseSlug,
       contentVersion: s.contentVersion,
       courses: s.courses,
-      activeCourseSlug: s.activeCourseSlug,
-      setActiveCourse: s.setActiveCourse,
       forceContentReload: s.forceContentReload,
-    })),
+      progress: s.progress,
+      setActiveCourse: s.setActiveCourse,
+      studentToken: s.studentToken,
+      username: s.username
+    }))
   )
 
   useEffect(() => {
@@ -72,9 +72,9 @@ export function CourseDetail() {
     if (slug !== activeCourseSlug) setActiveCourse(slug)
   }, [slug, contentVersion])
 
-  if (!username || !studentToken) return <Navigate to="/" replace />
-  if (contentVersion === 0) return <Navigate to="/" replace />
-  if (!slug || !courses.find((c) => c.slug === slug)) return <Navigate to="/" replace />
+  if (!username || !studentToken) return <Navigate to='/' replace />
+  if (contentVersion === 0) return <Navigate to='/' replace />
+  if (!slug || !courses.find((c) => c.slug === slug)) return <Navigate to='/' replace />
 
   const course = courses.find((c) => c.slug === slug)!
 
@@ -92,7 +92,7 @@ export function CourseDetail() {
     return EXERCISES.filter((e) => {
       if (e.phase !== phaseId) return false
       const s = progress[e.id] as ExerciseRecord | undefined
-      return s && s.autoCorrect === null && !s.claudeFeedback
+      return s?.autoCorrect === null && !s.claudeFeedback
     }).length
   }
 
@@ -102,40 +102,31 @@ export function CourseDetail() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg-base)' }}>
-
-      {/* ── Navbar ── */}
-      <nav
-        className="sticky top-0 z-10 px-6 py-3.5 flex items-center gap-3"
-        style={{ background: 'var(--nav-bg)', borderBottom: '1px solid var(--border-subtle)', backdropFilter: 'blur(20px)' }}
-      >
+    <div className='bg-surface min-h-screen'>
+      <nav className='bg-nav border-hairline sticky top-0 z-10 flex items-center gap-3 border-b px-6 py-3.5 backdrop-blur-[20px]'>
         <button
           onClick={() => navigate('/')}
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-sm transition-all hover:opacity-70"
-          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-subtle)' }}
-          title="Volver a cursos"
+          className='border-hairline bg-tint flex h-8 w-8 items-center justify-center rounded-lg border text-sm transition-all hover:opacity-70'
+          title='Volver a cursos'
         >
           ←
         </button>
         <div
-          className="w-8 h-8 rounded-xl flex items-center justify-center text-base shrink-0 overflow-hidden"
+          className='flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-xl text-base'
           style={{ background: `${course.color}25`, border: `1px solid ${course.color}40` }}
         >
-          <CourseIcon icon={course.icon} className="w-8 h-8" />
+          <CourseIcon icon={course.icon} className='h-8 w-8' />
         </div>
-        <div className="flex-1 min-w-0">
-          <div className="font-black text-sm leading-tight truncate" style={{ color: 'var(--text-1)' }}>
-            {course.name}
-          </div>
-          <div className="text-xs leading-tight" style={{ color: 'var(--text-3)' }}>
+        <div className='min-w-0 flex-1'>
+          <div className='text-fg truncate text-sm leading-tight font-semibold'>{course.name}</div>
+          <div className='text-fg-subtle text-xs leading-tight'>
             {PHASES.length} módulos · {username}
           </div>
         </div>
 
         <button
           onClick={() => navigate(`/course/${slug}/scores`)}
-          className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:opacity-80 hidden sm:flex items-center gap-1.5"
-          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-subtle)', color: 'var(--text-2)' }}
+          className='border-hairline text-fg-muted bg-tint hidden items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all hover:opacity-80 sm:flex'
         >
           📊 Calificaciones
         </button>
@@ -143,31 +134,27 @@ export function CourseDetail() {
         <ThemeToggle />
       </nav>
 
-      <div className="max-w-5xl mx-auto px-4 py-8 space-y-5">
-
-        {/* ── Progress hero card ── */}
-        <div
-          className="rounded-2xl p-6"
-          style={{ background: 'var(--bg-card)', border: '1px solid var(--border-default)', boxShadow: 'var(--shadow-card)' }}
-        >
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 mb-4">
+      <div className='mx-auto max-w-5xl space-y-5 px-4 py-8'>
+        <div className='bg-card border-line shadow-panel rounded-2xl border p-6'>
+          <div className='mb-4 flex flex-col justify-between gap-5 sm:flex-row sm:items-end'>
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-3)' }}>
-                Progreso del curso
-              </p>
-              <div className="flex items-baseline gap-3 flex-wrap">
+              <p className='text-fg-subtle mb-1.5 text-xs font-bold tracking-widest uppercase'>Progreso del curso</p>
+              <div className='flex flex-wrap items-baseline gap-3'>
                 <span
-                  className="font-black font-mono leading-none"
-                  style={{ fontSize: '3rem', color: 'var(--text-1)', letterSpacing: '-0.04em' }}
+                  className='font-mono leading-none font-semibold'
+                  style={{ color: 'var(--text-1)', fontSize: '3rem', letterSpacing: '-0.04em' }}
                 >
                   {globalPct}%
                 </span>
                 {globalScore !== null && (
-                  <span className="text-sm font-semibold" style={{ color: 'var(--text-2)' }}>
+                  <span className='text-fg-muted text-sm font-semibold'>
                     Score:{' '}
                     <span
-                      className="font-mono font-black"
-                      style={{ color: globalScore >= 80 ? 'var(--success)' : globalScore >= 50 ? 'var(--warning)' : 'var(--danger)' }}
+                      className='font-mono font-semibold'
+                      style={{
+                        color:
+                          globalScore >= 80 ? 'var(--success)' : globalScore >= 50 ? 'var(--warning)' : 'var(--danger)'
+                      }}
                     >
                       {globalScore}/100
                     </span>
@@ -175,16 +162,19 @@ export function CourseDetail() {
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-6 sm:gap-8 pb-0.5">
+            <div className='flex items-center gap-6 pb-0.5 sm:gap-8'>
               {[
-                { v: `${answeredEx}`, total: totalEx, l: 'Ejercicios', icon: '💻' },
-                { v: `${readLs}`, total: totalLs, l: 'Temas leídos', icon: '📚' },
+                { icon: '💻', l: 'Ejercicios', total: totalEx, v: `${answeredEx}` },
+                { icon: '📚', l: 'Temas leídos', total: totalLs, v: `${readLs}` }
               ].map((s, i) => (
-                <div key={i} className="text-center">
-                  <div className="font-black font-mono leading-none text-xl" style={{ color: 'var(--text-1)' }}>
-                    {s.v}<span className="text-sm font-bold" style={{ color: 'var(--text-3)' }}>/{s.total}</span>
+                <div key={i} className='text-center'>
+                  <div className='text-fg font-mono text-xl leading-none font-semibold'>
+                    {s.v}
+                    <span className='text-fg-subtle text-sm font-bold'>/{s.total}</span>
                   </div>
-                  <div className="text-xs mt-1" style={{ color: 'var(--text-3)' }}>{s.icon} {s.l}</div>
+                  <div className='text-fg-subtle mt-1 text-xs'>
+                    {s.icon} {s.l}
+                  </div>
                 </div>
               ))}
             </div>
@@ -192,21 +182,16 @@ export function CourseDetail() {
           <ProgressBar pct={globalPct} color={globalPct >= 100 ? 'green' : 'primary'} />
         </div>
 
-        {/* ── Contextual action banner ── */}
         {globalPct === 100 ? (
-          <div
-            className="rounded-2xl p-5 flex items-center gap-4"
-            style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)' }}
-          >
-            <span className="text-3xl">🏁</span>
+          <div className='bg-success-bg border-success-border flex items-center gap-4 rounded-2xl border p-5'>
+            <span className='font-serif text-3xl font-normal'>🏁</span>
             <div>
-              <p className="font-bold text-sm" style={{ color: '#6EE7B7' }}>¡Completaste el curso!</p>
-              <p className="text-xs mt-0.5" style={{ color: 'var(--text-2)' }}>
+              <p className='text-success text-sm font-bold'>¡Completaste el curso!</p>
+              <p className='text-fg-muted mt-0.5 text-xs'>
                 Revisá tus{' '}
                 <button
                   onClick={() => navigate(`/course/${slug}/scores`)}
-                  className="underline underline-offset-2 transition-opacity hover:opacity-70"
-                  style={{ color: '#6EE7B7' }}
+                  className='text-success underline underline-offset-2 transition-opacity hover:opacity-70'
                 >
                   calificaciones
                 </button>
@@ -216,66 +201,71 @@ export function CourseDetail() {
           </div>
         ) : hasAnyProgress && step ? (
           <div
-            className="rounded-2xl p-5 flex items-center justify-between gap-4"
+            className='flex items-center justify-between gap-4 rounded-2xl p-5'
             style={{
-              background: 'linear-gradient(135deg, rgba(171,157,242,0.11), rgba(120,220,232,0.06))',
-              border: '1px solid var(--border-default)',
+              background: 'linear-gradient(135deg, var(--primary-glow), var(--accent-glow))',
+              border: '1px solid var(--border-default)'
             }}
           >
-            <div className="min-w-0">
-              <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: 'var(--primary)' }}>
+            <div className='min-w-0'>
+              <p className='text-primary mb-1 text-xs font-bold tracking-wider uppercase'>
                 📍 Continuar donde lo dejaste
               </p>
-              <p className="font-bold text-base leading-snug truncate" style={{ color: 'var(--text-1)' }}>
+              <p className='text-fg truncate text-base leading-snug font-bold'>
                 {PHASES[step.phaseId]?.icon} {PHASES[step.phaseId]?.name}
               </p>
-              <p className="text-xs mt-1" style={{ color: 'var(--text-3)' }}>
+              <p className='text-fg-subtle mt-1 text-xs'>
                 {step.tab === 'theory' ? '📚 Teoría pendiente' : '💻 Ejercicios pendientes'}
               </p>
             </div>
             <button
               onClick={() => handleResume(step)}
-              className="shrink-0 px-6 py-2.5 rounded-xl text-sm font-bold transition-all hover:opacity-90 active:scale-95"
-              style={{ background: 'var(--grad)', color: '#fff', boxShadow: '0 4px 16px var(--primary-glow)', whiteSpace: 'nowrap' }}
+              className='shrink-0 rounded-xl px-6 py-2.5 text-sm font-bold transition-all hover:opacity-90 active:scale-95'
+              style={{
+                background: 'var(--grad)',
+                boxShadow: '0 4px 16px var(--primary-glow)',
+                color: '#fff',
+                whiteSpace: 'nowrap'
+              }}
             >
               Retomar →
             </button>
           </div>
         ) : !hasAnyProgress ? (
-          <div
-            className="rounded-2xl p-5 flex items-center justify-between gap-4"
-            style={{ background: 'rgba(171,157,242,0.06)', border: '1px solid var(--border-default)' }}
-          >
+          <div className='border-line bg-primary-glow flex items-center justify-between gap-4 rounded-2xl border p-5'>
             <div>
-              <p className="font-bold text-sm" style={{ color: 'var(--text-1)' }}>Comenzá por el primer módulo</p>
-              <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>Leé la teoría y completá los ejercicios.</p>
+              <p className='text-fg text-sm font-bold'>Comenzá por el primer módulo</p>
+              <p className='text-fg-subtle mt-0.5 text-xs'>Leé la teoría y completá los ejercicios.</p>
             </div>
             <button
               onClick={() => handlePhase(0)}
-              className="shrink-0 px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:opacity-90 active:scale-95"
-              style={{ background: 'var(--grad)', color: '#fff', boxShadow: '0 4px 16px var(--primary-glow)', whiteSpace: 'nowrap' }}
+              className='shrink-0 rounded-xl px-5 py-2.5 text-sm font-bold transition-all hover:opacity-90 active:scale-95'
+              style={{
+                background: 'var(--grad)',
+                boxShadow: '0 4px 16px var(--primary-glow)',
+                color: '#fff',
+                whiteSpace: 'nowrap'
+              }}
             >
               Empezar →
             </button>
           </div>
         ) : null}
 
-        {/* ── Phases grid ── */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+          <div className='mb-4 flex items-center justify-between'>
+            <h2 className='text-fg-subtle text-xs font-bold tracking-widest uppercase'>
               Módulos del curso — {PHASES.length} fases
             </h2>
             <button
               onClick={() => navigate(`/course/${slug}/scores`)}
-              className="text-xs font-semibold flex items-center gap-1 transition-opacity hover:opacity-70 sm:hidden"
-              style={{ color: 'var(--text-3)' }}
+              className='text-fg-subtle flex items-center gap-1 text-xs font-semibold transition-opacity hover:opacity-70 sm:hidden'
             >
               📊 Calificaciones
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 stagger">
+          <div className='stagger grid grid-cols-1 gap-3 sm:grid-cols-2'>
             {PHASES.map((ph) => {
               const unlocked = isPhaseUnlocked(progress, ph.id)
               const ex = getPhaseExStats(progress, ph.id)
@@ -286,20 +276,24 @@ export function CourseDetail() {
               const done = ex.answered + ls.read
               const pct = total > 0 ? Math.round((done / total) * 100) : 0
               const isComplete = done === total && total > 0 && unlocked
-              const ringColor = isComplete ? 'var(--success)' : unlocked ? course.color : 'rgba(255,255,255,0.07)'
+              const ringColor = isComplete ? 'var(--success)' : unlocked ? course.color : 'var(--tint-2)'
 
               return (
                 <button
                   key={ph.id}
                   onClick={() => unlocked && handlePhase(ph.id)}
                   disabled={!unlocked}
-                  className="w-full text-left rounded-2xl p-5 transition-all"
+                  className='w-full rounded-2xl p-5 text-left transition-all'
                   style={{
-                    background: unlocked ? 'var(--bg-card)' : 'rgba(255,255,255,0.012)',
-                    border: unlocked ? isComplete ? '1px solid var(--success-border)' : '1px solid var(--border-default)' : '1px solid rgba(255,255,255,0.04)',
-                    opacity: unlocked ? 1 : 0.45,
+                    background: unlocked ? 'var(--bg-card)' : 'var(--tint-1)',
+                    border: unlocked
+                      ? isComplete
+                        ? '1px solid var(--success-border)'
+                        : '1px solid var(--border-default)'
+                      : '1px solid var(--tint-1)',
+                    boxShadow: unlocked ? 'var(--shadow-panel)' : 'none',
                     cursor: unlocked ? 'pointer' : 'not-allowed',
-                    boxShadow: unlocked ? 'var(--shadow-card)' : 'none',
+                    opacity: unlocked ? 1 : 0.45
                   }}
                   onMouseEnter={(e) => {
                     if (unlocked) {
@@ -309,66 +303,57 @@ export function CourseDetail() {
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = ''
-                    e.currentTarget.style.boxShadow = unlocked ? 'var(--shadow-card)' : 'none'
+                    e.currentTarget.style.boxShadow = unlocked ? 'var(--shadow-panel)' : 'none'
                   }}
                 >
-                  <div className="flex items-start justify-between gap-3 mb-4">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span
-                        className="text-xs font-bold px-2 py-0.5 rounded-md font-mono"
-                        style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--text-3)' }}
-                      >
+                  <div className='mb-4 flex items-start justify-between gap-3'>
+                    <div className='flex flex-wrap items-center gap-2'>
+                      <span className='text-fg-subtle bg-tint-strong rounded-md px-2 py-0.5 font-mono text-xs font-bold'>
                         F{ph.id}
                       </span>
-                      {!unlocked && <span className="text-xs">🔒</span>}
+                      {!unlocked && <span className='text-xs'>🔒</span>}
                       {isComplete && (
-                        <span
-                          className="text-xs font-bold px-2 py-0.5 rounded-full"
-                          style={{ background: 'var(--success-bg)', color: '#6EE7B7', border: '1px solid var(--success-border)' }}
-                        >
+                        <span className='bg-success-bg border-success-border text-success rounded-full border px-2 py-0.5 text-xs font-bold'>
                           ✓ Completado
                         </span>
                       )}
                       {unlocked && !isComplete && done > 0 && (
-                        <span
-                          className="text-xs font-bold px-2 py-0.5 rounded-full"
-                          style={{ background: 'rgba(171,157,242,0.10)', color: 'var(--primary)', border: '1px solid var(--border-default)' }}
-                        >
+                        <span className='text-primary border-line bg-primary-glow rounded-full border px-2 py-0.5 text-xs font-bold'>
                           En curso
                         </span>
                       )}
                       {pending > 0 && (
-                        <span
-                          className="text-xs font-semibold px-1.5 py-0.5 rounded-full"
-                          style={{ background: 'var(--warning-bg)', color: '#ffd866', border: '1px solid var(--warning-border)' }}
-                        >
+                        <span className='bg-warning-bg border-warning-border text-warning rounded-full border px-1.5 py-0.5 text-xs font-semibold'>
                           🤖 {pending}
                         </span>
                       )}
                     </div>
-                    <div className="relative shrink-0" style={{ width: 52, height: 52 }}>
+                    <div className='relative h-[52px] w-[52px] shrink-0'>
                       <RingProgress pct={unlocked ? pct : 0} size={52} stroke={4} color={ringColor} />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-xs font-black font-mono" style={{ color: unlocked ? 'var(--text-1)' : 'var(--text-3)', fontSize: '0.65rem' }}>
+                      <div className='absolute inset-0 flex items-center justify-center'>
+                        <span
+                          className='font-mono text-xs font-semibold'
+                          style={{ color: unlocked ? 'var(--text-1)' : 'var(--text-3)', fontSize: '0.65rem' }}
+                        >
                           {unlocked ? `${pct}%` : '—'}
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="font-bold text-base leading-snug mb-4" style={{ color: 'var(--text-1)' }}>
+                  <div className='text-fg mb-4 text-base leading-snug font-bold'>
                     {ph.icon} {ph.name}
                   </div>
 
-                  <div className="flex items-center gap-2.5 flex-wrap mb-3">
-                    <span className="text-xs px-2 py-0.5 rounded-md" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-subtle)', color: 'var(--text-2)' }}>
+                  <div className='mb-3 flex flex-wrap items-center gap-2.5'>
+                    <span className='border-hairline text-fg-muted bg-tint rounded-md border px-2 py-0.5 text-xs'>
                       📚 {ls.read}/{ls.total}
                     </span>
-                    <span className="text-xs px-2 py-0.5 rounded-md" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-subtle)', color: 'var(--text-2)' }}>
+                    <span className='border-hairline text-fg-muted bg-tint rounded-md border px-2 py-0.5 text-xs'>
                       💻 {ex.answered}/{ex.total}
                     </span>
                     {score !== null && <ScorePill score={score} />}
-                    {!unlocked && <span className="text-xs" style={{ color: 'var(--text-3)' }}>Completá la fase anterior</span>}
+                    {!unlocked && <span className='text-fg-subtle text-xs'>Completá la fase anterior</span>}
                   </div>
 
                   {unlocked && <ProgressBar pct={pct} color={isComplete ? 'green' : 'primary'} />}

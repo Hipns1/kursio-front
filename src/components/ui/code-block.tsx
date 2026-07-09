@@ -5,16 +5,9 @@
 
 export function CodeBlock({ code, label }: CodeBlockProps) {
   return (
-    <div className="mb-4">
-      {label && (
-        <span className="text-xs font-mono mb-1 block uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
-          {label}
-        </span>
-      )}
-      <pre
-        className="rounded-xl p-4 text-xs overflow-x-auto leading-relaxed font-mono whitespace-pre"
-        style={{ background: '#0D1117', color: '#7EE787', border: '1px solid rgba(171,157,242,0.12)' }}
-      >
+    <div className='mb-4'>
+      {label && <span className='text-fg-subtle mb-1 block font-mono text-xs tracking-widest uppercase'>{label}</span>}
+      <pre className='border-line overflow-x-auto rounded-xl border bg-[#0D1117] p-4 font-mono text-xs leading-relaxed whitespace-pre text-[#7EE787]'>
         {code}
       </pre>
     </div>

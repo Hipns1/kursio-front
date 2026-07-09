@@ -17,20 +17,20 @@ const Ctx = createContext<ToastCtx>({ toast: () => {} })
 let _id = 0
 
 const ICONS: Record<ToastKind, string> = {
-  success: '✓',
   error: '✕',
   info: 'ℹ',
+  success: '✓',
   warning: '⚠'
 }
 
 const COLORS: Record<ToastKind, { bg: string; border: string; icon: string }> = {
-  success: { bg: 'rgba(169,220,118,0.12)', border: 'rgba(169,220,118,0.30)', icon: '#a9dc76' },
-  error: { bg: 'rgba(255,97,136,0.12)', border: 'rgba(255,97,136,0.30)', icon: '#ff6188' },
-  info: { bg: 'rgba(171,157,242,0.12)', border: 'rgba(171,157,242,0.30)', icon: '#ab9df2' },
-  warning: { bg: 'rgba(255,216,102,0.12)', border: 'rgba(255,216,102,0.30)', icon: '#ffd866' }
+  error: { bg: 'var(--danger-bg)', border: 'var(--danger-border)', icon: 'var(--danger)' },
+  info: { bg: 'var(--primary-glow)', border: 'var(--primary-glow)', icon: 'var(--primary)' },
+  success: { bg: 'var(--success-bg)', border: 'var(--success-border)', icon: 'var(--success)' },
+  warning: { bg: 'var(--warning-bg)', border: 'var(--warning-border)', icon: 'var(--warning)' }
 }
 
-function Toaster({ toasts, onDismiss }: { toasts: ToastItem[]; onDismiss: (id: number) => void }) {
+function Toaster({ onDismiss, toasts }: { toasts: ToastItem[]; onDismiss: (id: number) => void }) {
   if (toasts.length === 0) return null
   return (
     <div className='fixed top-4 right-4 z-9999 flex flex-col gap-2' style={{ pointerEvents: 'none' }}>
@@ -44,24 +44,21 @@ function Toaster({ toasts, onDismiss }: { toasts: ToastItem[]; onDismiss: (id: n
               background: 'var(--bg-card)',
               border: `1px solid ${c.border}`,
               boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
-              pointerEvents: 'auto',
               maxWidth: '360px',
-              minWidth: '240px'
+              minWidth: '240px',
+              pointerEvents: 'auto'
             }}
           >
             <span
-              className='flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-black'
+              className='flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold'
               style={{ background: c.bg, color: c.icon }}
             >
               {ICONS[t.kind]}
             </span>
-            <span className='flex-1 leading-snug' style={{ color: 'var(--text-1)' }}>
-              {t.message}
-            </span>
+            <span className='text-fg flex-1 leading-snug'>{t.message}</span>
             <button
               onClick={() => onDismiss(t.id)}
-              className='flex h-5 w-5 shrink-0 items-center justify-center rounded text-xs transition-opacity hover:opacity-60'
-              style={{ color: 'var(--text-3)' }}
+              className='text-fg-subtle flex h-5 w-5 shrink-0 items-center justify-center rounded text-xs transition-opacity hover:opacity-60'
             >
               ✕
             </button>
@@ -77,7 +74,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
   const toast = useCallback((message: string, kind: ToastKind = 'success') => {
     const id = ++_id
-    setToasts((prev) => [...prev, { id, message, kind }])
+    setToasts((prev) => [...prev, { id, kind, message }])
     setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3800)
   }, [])
 

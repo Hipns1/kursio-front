@@ -20,13 +20,13 @@ interface LessonsTabProps {
 }
 
 export function LessonsTab({
-  phaseId,
-  phase,
-  progress,
-  onMarkRead,
   onBack,
   onGoToExercises,
-  startAt,
+  onMarkRead,
+  phase,
+  phaseId,
+  progress,
+  startAt
 }: LessonsTabProps) {
   const lessons = LESSONS.filter((l) => l.phase === phaseId)
   const readMap = progress.__lessons || {}
@@ -45,14 +45,11 @@ export function LessonsTab({
 
   if (lessons.length === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ background: 'var(--bg-base)' }}>
-        <p className="text-sm" style={{ color: 'var(--text-3)' }}>
-          No hay lecciones en esta fase.
-        </p>
+      <div className='bg-surface flex min-h-screen flex-col items-center justify-center gap-4'>
+        <p className='text-fg-subtle text-sm'>No hay lecciones en esta fase.</p>
         <button
           onClick={onGoToExercises}
-          className="px-5 py-2.5 rounded-xl text-white text-sm font-semibold"
-          style={{ background: 'var(--grad)' }}
+          className='bg-grad text-on-primary rounded-xl px-5 py-2.5 text-sm font-semibold'
         >
           Ir a ejercicios →
         </button>
@@ -89,78 +86,46 @@ export function LessonsTab({
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg-base)' }}>
-      {/* Progress bar */}
-      <div className="h-0.5 w-full" style={{ background: 'rgba(255,255,255,0.06)' }}>
+    <div className='bg-surface flex min-h-screen flex-col'>
+      <div className='bg-tint-strong h-0.5 w-full'>
         <div
-          className="h-full transition-all duration-500"
-          style={{ width: `${progressPct}%`, background: '#22c55e' }}
+          className='h-full transition-all duration-500'
+          style={{ background: 'var(--success)', width: `${progressPct}%` }}
         />
       </div>
 
-      {/* Nav */}
-      <div
-        className="px-5 py-3.5 flex items-center justify-between"
-        style={{
-          background: 'var(--nav-bg)',
-          borderBottom: '1px solid var(--border-subtle)',
-          backdropFilter: 'blur(20px)',
-        }}
-      >
+      <div className='bg-nav border-hairline flex items-center justify-between border-b px-5 py-3.5 backdrop-blur-[20px]'>
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 text-sm font-medium transition-all hover:opacity-70"
-          style={{ color: 'var(--text-2)' }}
+          className='text-fg-muted flex items-center gap-1.5 text-sm font-medium transition-all hover:opacity-70'
         >
           ← Volver
         </button>
-        <span className="text-sm font-semibold" style={{ color: '#22c55e' }}>
+        <span className='text-success text-sm font-semibold'>
           📖 Lección {idx + 1} de {lessons.length}
         </span>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="px-4 py-7 max-w-2xl mx-auto w-full">
-          {/* Breadcrumb */}
-          <p
-            className="text-xs font-bold uppercase tracking-widest mb-5"
-            style={{ color: 'var(--text-3)' }}
-          >
+      <div className='flex-1 overflow-y-auto'>
+        <div className='mx-auto w-full max-w-2xl px-4 py-7'>
+          <p className='text-fg-subtle mb-5 text-xs font-bold tracking-widest uppercase'>
             FASE {phaseId} · {phase?.name}
           </p>
 
-          <div
-            key={currentLesson.id}
-            className={slideDir === 'right' ? 'animate-slide-right' : 'animate-slide-left'}
-          >
-            {/* Title */}
-            <div className="flex items-center gap-3 mb-7">
-              <span className="text-3xl">{phase?.icon}</span>
-              <h1 className="font-black text-2xl leading-tight" style={{ color: 'var(--text-1)' }}>
-                {currentLesson.title}
-              </h1>
+          <div key={currentLesson.id} className={slideDir === 'right' ? 'animate-slide-right' : 'animate-slide-left'}>
+            <div className='mb-7 flex items-center gap-3'>
+              <span className='font-serif text-3xl font-normal'>{phase?.icon}</span>
+              <h1 className='text-fg font-serif text-2xl leading-tight font-normal'>{currentLesson.title}</h1>
             </div>
 
-            {/* Content card */}
-            <div
-              className="rounded-2xl p-6 mb-4"
-              style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
-            >
+            <div className='bg-card border-hairline mb-4 rounded-2xl border p-6'>
               {currentLesson.blocks.map((block, i) => (
                 <LessonBlock key={i} block={block} />
               ))}
             </div>
 
             {(isCurrentRead || justMarked) && (
-              <div
-                className="flex items-center gap-2 text-xs font-semibold px-4 py-2.5 rounded-xl animate-fade-in"
-                style={{
-                  background: 'rgba(34,197,94,0.08)',
-                  border: '1px solid rgba(34,197,94,0.20)',
-                  color: '#a9dc76',
-                }}
-              >
+              <div className='animate-fade-in text-success flex items-center gap-2 rounded-xl border border-[rgba(34,197,94,0.20)] bg-[rgba(34,197,94,0.08)] px-4 py-2.5 text-xs font-semibold'>
                 ✓ Lección leída
               </div>
             )}
@@ -168,45 +133,26 @@ export function LessonsTab({
         </div>
       </div>
 
-      {/* Bottom nav */}
-      <div
-        className="sticky bottom-0 px-4 py-3.5 flex items-center justify-between gap-3"
-        style={{
-          background: 'var(--nav-bg)',
-          borderTop: '1px solid var(--border-subtle)',
-          backdropFilter: 'blur(20px)',
-        }}
-      >
+      <div className='bg-nav border-hairline sticky bottom-0 flex items-center justify-between gap-3 border-t px-4 py-3.5 backdrop-blur-[20px]'>
         <button
           onClick={goPrev}
-          className="px-5 py-2.5 rounded-xl text-sm font-medium transition-all hover:opacity-80"
-          style={{
-            background: 'var(--bg-elevated)',
-            border: '1px solid var(--border-subtle)',
-            color: 'var(--text-2)',
-          }}
+          className='bg-elevated border-hairline text-fg-muted rounded-xl border px-5 py-2.5 text-sm font-medium transition-all hover:opacity-80'
         >
           ← {idx === 0 ? 'Volver' : 'Anterior'}
         </button>
 
-        {/* Dot indicators */}
-        <div className="flex gap-1.5 items-center">
+        <div className='flex items-center gap-1.5'>
           {lessons.map((l, i) => {
             const read = !!readMap[l.id]
             return (
               <button
                 key={i}
                 onClick={() => goTo(i)}
-                className="rounded-full transition-all"
+                className='rounded-full transition-all'
                 style={{
-                  width: i === idx ? 20 : 8,
+                  background: i === idx ? 'var(--success)' : read ? 'var(--success-border)' : 'var(--tint-2)',
                   height: 8,
-                  background:
-                    i === idx
-                      ? '#22c55e'
-                      : read
-                        ? 'rgba(34,197,94,0.45)'
-                        : 'rgba(255,255,255,0.15)',
+                  width: i === idx ? 20 : 8
                 }}
               />
             )
@@ -215,7 +161,7 @@ export function LessonsTab({
 
         <button
           onClick={goNext}
-          className="px-5 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:opacity-90"
+          className='rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-all hover:opacity-90'
           style={{ background: '#16a34a', boxShadow: '0 4px 14px rgba(22,163,74,0.30)' }}
         >
           {isLast ? (allRead ? 'Ir a ejercicios →' : 'Listo →') : 'Siguiente →'}

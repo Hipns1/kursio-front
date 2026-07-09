@@ -8,13 +8,13 @@ import type { StudentRoadmapResult } from '@/types/learning'
 export function Onboarding() {
   const navigate = useNavigate()
 
-  const { username, studentToken, setRoadmap, setRoadmapChecked } = useBoundStore(
+  const { setRoadmap, setRoadmapChecked, studentToken, username } = useBoundStore(
     useShallow((s) => ({
-      username: s.username,
-      studentToken: s.studentToken,
       setRoadmap: s.setRoadmap,
       setRoadmapChecked: s.setRoadmapChecked,
-    })),
+      studentToken: s.studentToken,
+      username: s.username
+    }))
   )
 
   useEffect(() => {

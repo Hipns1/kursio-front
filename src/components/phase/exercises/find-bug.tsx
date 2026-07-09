@@ -6,11 +6,8 @@ import { useAutoGrade } from '@/hooks/phase/use-auto-grade'
 interface GradingIndicatorProps {}
 function GradingIndicator(_: GradingIndicatorProps) {
   return (
-    <div
-      className="flex items-center gap-2 mt-3 text-sm rounded-xl px-4 py-3"
-      style={{ background: 'rgba(171,157,242,0.08)', border: '1px solid var(--border-default)', color: '#A5B4FC' }}
-    >
-      <span className="animate-pulse">🤖</span>
+    <div className='border-line bg-primary-glow mt-3 flex items-center gap-2 rounded-xl border px-4 py-3 text-sm text-[#A5B4FC]'>
+      <span className='animate-pulse'>🤖</span>
       <span>Claude Haiku calificando...</span>
     </div>
   )
@@ -18,10 +15,7 @@ function GradingIndicator(_: GradingIndicatorProps) {
 
 function ApiErrorMsg({ msg }: { msg: string }) {
   return (
-    <div
-      className="mt-3 text-xs rounded-xl px-3 py-2.5"
-      style={{ background: 'var(--danger-bg)', border: '1px solid rgba(255,97,136,0.25)', color: '#ffb3c6' }}
-    >
+    <div className='bg-danger-bg border-danger-border text-danger mt-3 rounded-xl border px-3 py-2.5 text-xs'>
       {msg}
     </div>
   )
@@ -35,14 +29,14 @@ interface FindBugProps {
   onGrade?: (exerciseId: string, result: GradeResult) => void
 }
 
-export function FindBug({ exercise, saved, onAnswer, studentToken, onGrade }: FindBugProps) {
+export function FindBug({ exercise, onAnswer, onGrade, saved, studentToken }: FindBugProps) {
   const [val, setVal] = useState(saved?.userAnswer ?? '')
-  const { grading, apiError, grade } = useAutoGrade(exercise, onGrade, studentToken)
+  const { apiError, grade, grading } = useAutoGrade(exercise, onGrade, studentToken)
   const done = saved !== undefined
 
   const submit = async () => {
     if (!val.trim()) return
-    onAnswer({ type: exercise.type, userAnswer: val, autoCorrect: null })
+    onAnswer({ autoCorrect: null, type: exercise.type, userAnswer: val })
     await grade(val)
   }
 
@@ -52,12 +46,12 @@ export function FindBug({ exercise, saved, onAnswer, studentToken, onGrade }: Fi
         value={val}
         onChange={(e) => setVal(e.target.value)}
         disabled={done}
-        placeholder="Describí el bug y cómo lo corregirías..."
+        placeholder='Describí el bug y cómo lo corregirías...'
         rows={4}
       />
       {!done && (
-        <div className="mt-3">
-          <PrimaryBtn onClick={submit} disabled={!val.trim()} color="red">
+        <div className='mt-3'>
+          <PrimaryBtn onClick={submit} disabled={!val.trim()} color='red'>
             Reportar bug y auto-calificar 🤖
           </PrimaryBtn>
         </div>

@@ -7,7 +7,7 @@ interface Props {
   onComplete: (roadmap: StudentRoadmapResult) => void
 }
 
-export function OnboardingScreen({ token, onComplete }: Props) {
+export function OnboardingScreen({ onComplete, token }: Props) {
   const [questions, setQuestions] = useState<OnboardingQuestion[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -31,7 +31,7 @@ export function OnboardingScreen({ token, onComplete }: Props) {
   const current = questions[step]
   const answered = Object.keys(answers).length
   const allAnswered = answered === total && total > 0
-  const progress = total > 0 ? ((step) / total) * 100 : 0
+  const progress = total > 0 ? (step / total) * 100 : 0
 
   const handleSelect = (questionId: number, optionId: number) => {
     setAnswers((prev) => ({ ...prev, [questionId]: optionId }))
@@ -51,8 +51,8 @@ export function OnboardingScreen({ token, onComplete }: Props) {
     setError('')
     try {
       const payload = Object.entries(answers).map(([qId, oId]) => ({
-        questionId: Number(qId),
         optionId: oId,
+        questionId: Number(qId)
       }))
       const roadmap = await submitOnboarding(token, payload)
       onComplete(roadmap)
@@ -64,10 +64,10 @@ export function OnboardingScreen({ token, onComplete }: Props) {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center" style={{ background: 'var(--bg-base)' }}>
-        <div className="text-center space-y-3">
-          <div className="text-3xl animate-pulse">🧭</div>
-          <p className="text-sm animate-pulse" style={{ color: 'var(--text-3)' }}>Preparando tu onboarding...</p>
+      <div className='bg-surface flex min-h-screen items-center justify-center'>
+        <div className='space-y-3 text-center'>
+          <div className='animate-pulse font-serif text-3xl font-normal'>🧭</div>
+          <p className='text-fg-subtle animate-pulse text-sm'>Preparando tu onboarding...</p>
         </div>
       </div>
     )
@@ -75,21 +75,21 @@ export function OnboardingScreen({ token, onComplete }: Props) {
 
   if (submitting) {
     return (
-      <div className="flex min-h-screen items-center justify-center" style={{ background: 'var(--bg-base)' }}>
-        <div className="text-center space-y-4 max-w-sm px-6">
-          <div className="text-4xl mb-2 animate-spin">🤖</div>
-          <h2 className="font-black text-xl" style={{ color: 'var(--text-1)' }}>Analizando tu perfil...</h2>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-3)' }}>
+      <div className='bg-surface flex min-h-screen items-center justify-center'>
+        <div className='max-w-sm space-y-4 px-6 text-center'>
+          <div className='mb-2 animate-spin font-serif text-4xl font-normal'>🤖</div>
+          <h2 className='text-fg text-xl font-semibold'>Analizando tu perfil...</h2>
+          <p className='text-fg-subtle text-sm leading-relaxed'>
             Nuestra IA está diseñando tu roadmap personalizado basado en tus respuestas.
           </p>
-          <div className="flex justify-center gap-1 pt-2">
+          <div className='flex justify-center gap-1 pt-2'>
             {[0, 1, 2].map((i) => (
               <div
                 key={i}
-                className="h-2 w-2 rounded-full animate-bounce"
+                className='h-2 w-2 animate-bounce rounded-full'
                 style={{
-                  background: 'var(--primary)',
                   animationDelay: `${i * 0.2}s`,
+                  background: 'var(--primary)'
                 }}
               />
             ))}
@@ -100,97 +100,77 @@ export function OnboardingScreen({ token, onComplete }: Props) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg-base)' }}>
-      {/* Header */}
-      <div
-        className="sticky top-0 z-10"
-        style={{
-          background: 'var(--nav-bg)',
-          borderBottom: '1px solid var(--border-subtle)',
-          backdropFilter: 'blur(12px)',
-        }}
-      >
-        <div className="mx-auto max-w-xl px-4 py-4">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
+    <div className='bg-surface flex min-h-screen flex-col'>
+      <div className='bg-nav border-hairline sticky top-0 z-10 border-b backdrop-blur-[12px]'>
+        <div className='mx-auto max-w-xl px-4 py-4'>
+          <div className='mb-3 flex items-center justify-between'>
+            <div className='flex items-center gap-2'>
               <div
-                className="flex h-8 w-8 items-center justify-center rounded-xl text-base"
+                className='flex h-8 w-8 items-center justify-center rounded-xl text-base'
                 style={{ background: 'var(--grad)', boxShadow: '0 4px 12px var(--primary-glow)' }}
               >
                 🧭
               </div>
               <div>
-                <p className="font-bold text-xs" style={{ color: 'var(--text-1)' }}>Onboarding</p>
-                <p className="text-xs" style={{ color: 'var(--text-3)' }}>
+                <p className='text-fg text-xs font-bold'>Onboarding</p>
+                <p className='text-fg-subtle text-xs'>
                   {step + 1} de {total}
                 </p>
               </div>
             </div>
-            <div className="text-right">
-              <p className="text-xs font-semibold" style={{ color: 'var(--primary)' }}>
+            <div className='text-right'>
+              <p className='text-primary text-xs font-semibold'>
                 {answered}/{total} respondidas
               </p>
             </div>
           </div>
 
-          {/* Progress bar */}
-          <div className="h-1.5 overflow-hidden rounded-full" style={{ background: 'rgba(255,255,255,0.07)' }}>
+          <div className='bg-tint-strong h-1.5 overflow-hidden rounded-full'>
             <div
-              className="h-full rounded-full transition-all duration-500"
-              style={{ width: `${progress}%`, background: 'var(--grad)' }}
+              className='h-full rounded-full transition-all duration-500'
+              style={{ background: 'var(--grad)', width: `${progress}%` }}
             />
           </div>
         </div>
       </div>
 
-      {/* Question area */}
-      <div className="flex-1 flex items-start justify-center px-4 py-8">
-        <div className="w-full max-w-xl">
+      <div className='flex flex-1 items-start justify-center px-4 py-8'>
+        <div className='w-full max-w-xl'>
           {error && (
-            <div
-              className="mb-4 rounded-xl px-4 py-3 text-sm"
-              style={{ background: 'rgba(255,97,136,0.10)', color: '#ffb3c6', border: '1px solid rgba(255,97,136,0.25)' }}
-            >
+            <div className='border-danger-border bg-danger-bg text-danger mb-4 rounded-xl border px-4 py-3 text-sm'>
               {error}
             </div>
           )}
 
           {current && (
-            <div className="animate-fade-up space-y-5" key={step}>
-              {/* Step indicator dots */}
-              <div className="flex gap-1.5 justify-center">
+            <div className='animate-fade-up space-y-5' key={step}>
+              <div className='flex justify-center gap-1.5'>
                 {questions.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setStep(i)}
-                    className="transition-all duration-300 rounded-full"
+                    className='rounded-full transition-all duration-300'
                     style={{
-                      width: i === step ? '20px' : '6px',
+                      background:
+                        i === step
+                          ? 'var(--primary)'
+                          : answers[questions[i]?.id]
+                            ? 'var(--primary-glow)'
+                            : 'var(--tint-2)',
                       height: '6px',
-                      background: i === step
-                        ? 'var(--primary)'
-                        : answers[questions[i]?.id]
-                        ? 'rgba(171,157,242,0.4)'
-                        : 'rgba(255,255,255,0.12)',
+                      width: i === step ? '20px' : '6px'
                     }}
                   />
                 ))}
               </div>
 
-              {/* Question */}
-              <div
-                className="rounded-2xl p-6"
-                style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
-              >
-                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-3)' }}>
+              <div className='bg-card border-hairline rounded-2xl border p-6'>
+                <p className='text-fg-subtle mb-3 text-xs font-semibold tracking-wider uppercase'>
                   Pregunta {step + 1}
                 </p>
-                <h2 className="font-black text-lg leading-snug mb-5" style={{ color: 'var(--text-1)' }}>
-                  {current.text}
-                </h2>
+                <h2 className='text-fg mb-5 text-lg leading-snug font-semibold'>{current.text}</h2>
 
-                {/* Options */}
-                <div className="space-y-2">
+                <div className='space-y-2'>
                   {current.options
                     .slice()
                     .sort((a, b) => a.order - b.order)
@@ -200,28 +180,32 @@ export function OnboardingScreen({ token, onComplete }: Props) {
                         <button
                           key={opt.id}
                           onClick={() => handleSelect(current.id, opt.id)}
-                          className="w-full text-left rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200"
+                          className='w-full rounded-xl px-4 py-3 text-left text-sm font-medium transition-all duration-200'
                           style={{
-                            background: selected ? 'rgba(171,157,242,0.15)' : 'var(--bg-elevated)',
-                            color: selected ? 'var(--primary)' : 'var(--text-2)',
-                            border: selected
-                              ? '1.5px solid var(--primary)'
-                              : '1px solid var(--border-subtle)',
-                            transform: selected ? 'scale(1.01)' : 'scale(1)',
+                            background: selected ? 'var(--primary-glow)' : 'var(--bg-elevated)',
+                            border: selected ? '1.5px solid var(--primary)' : '1px solid var(--border-subtle)',
                             boxShadow: selected ? '0 0 0 3px var(--primary-glow)' : 'none',
+                            color: selected ? 'var(--primary)' : 'var(--text-2)',
+                            transform: selected ? 'scale(1.01)' : 'scale(1)'
                           }}
                         >
-                          <div className="flex items-center gap-3">
+                          <div className='flex items-center gap-3'>
                             <div
-                              className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all"
+                              className='flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all'
                               style={{
-                                borderColor: selected ? 'var(--primary)' : 'rgba(255,255,255,0.2)',
                                 background: selected ? 'var(--primary)' : 'transparent',
+                                borderColor: selected ? 'var(--primary)' : 'var(--border-default)'
                               }}
                             >
                               {selected && (
-                                <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                                  <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <svg width='10' height='8' viewBox='0 0 10 8' fill='none'>
+                                  <path
+                                    d='M1 4L3.5 6.5L9 1'
+                                    stroke='white'
+                                    strokeWidth='1.5'
+                                    strokeLinecap='round'
+                                    strokeLinejoin='round'
+                                  />
                                 </svg>
                               )}
                             </div>
@@ -233,17 +217,11 @@ export function OnboardingScreen({ token, onComplete }: Props) {
                 </div>
               </div>
 
-              {/* Navigation */}
-              <div className="flex gap-3">
+              <div className='flex gap-3'>
                 {step > 0 && (
                   <button
                     onClick={handleBack}
-                    className="rounded-xl px-5 py-3 text-sm font-semibold transition-all hover:opacity-80"
-                    style={{
-                      background: 'var(--bg-card)',
-                      color: 'var(--text-2)',
-                      border: '1px solid var(--border-default)',
-                    }}
+                    className='bg-card text-fg-muted border-line rounded-xl border px-5 py-3 text-sm font-semibold transition-all hover:opacity-80'
                   >
                     ← Anterior
                   </button>
@@ -253,12 +231,12 @@ export function OnboardingScreen({ token, onComplete }: Props) {
                   <button
                     onClick={handleNext}
                     disabled={!answers[current.id]}
-                    className="flex-1 rounded-xl px-5 py-3 text-sm font-bold transition-all disabled:opacity-40"
+                    className='flex-1 rounded-xl px-5 py-3 text-sm font-bold transition-all disabled:opacity-40'
                     style={{
                       background: answers[current.id] ? 'var(--grad)' : 'var(--bg-card)',
-                      color: answers[current.id] ? '#fff' : 'var(--text-3)',
                       border: answers[current.id] ? 'none' : '1px solid var(--border-default)',
                       boxShadow: answers[current.id] ? '0 4px 14px var(--primary-glow)' : 'none',
+                      color: answers[current.id] ? '#fff' : 'var(--text-3)'
                     }}
                   >
                     Siguiente →
@@ -267,12 +245,12 @@ export function OnboardingScreen({ token, onComplete }: Props) {
                   <button
                     onClick={handleSubmit}
                     disabled={!allAnswered}
-                    className="flex-1 rounded-xl px-5 py-3 text-sm font-bold transition-all disabled:opacity-40"
+                    className='flex-1 rounded-xl px-5 py-3 text-sm font-bold transition-all disabled:opacity-40'
                     style={{
                       background: allAnswered ? 'var(--grad)' : 'var(--bg-card)',
-                      color: allAnswered ? '#fff' : 'var(--text-3)',
                       border: allAnswered ? 'none' : '1px solid var(--border-default)',
                       boxShadow: allAnswered ? '0 4px 14px var(--primary-glow)' : 'none',
+                      color: allAnswered ? '#fff' : 'var(--text-3)'
                     }}
                   >
                     🚀 Generar mi Roadmap

@@ -22,21 +22,19 @@ export function getPhaseExercises(phaseId: number): Exercise[] {
 export function getPhaseExStats(progress: Progress, phaseId: number) {
   const exs = getPhaseExercises(phaseId)
   const answered = exs.filter((e) => progress[e.id] !== undefined).length
-  return { total: exs.length, answered }
+  return { answered, total: exs.length }
 }
 
 export function getPhaseLsStats(progress: Progress, phaseId: number) {
   const ls = LESSONS.filter((l) => l.phase === phaseId)
   const read = ls.filter((l) => (progress.__lessons || {})[l.id]).length
-  return { total: ls.length, read }
+  return { read, total: ls.length }
 }
 
 export function isPhaseComplete(progress: Progress, phaseId: number): boolean {
   const lessons = LESSONS.filter((l) => l.phase === phaseId)
   const exs = getPhaseExercises(phaseId)
-  return (
-    lessons.every((l) => progress.__lessons?.[l.id]) && exs.every((e) => progress[e.id] !== undefined)
-  )
+  return lessons.every((l) => progress.__lessons?.[l.id]) && exs.every((e) => progress[e.id] !== undefined)
 }
 
 export function isPhaseUnlocked(_progress: Progress, _phaseId: number): boolean {
@@ -91,11 +89,16 @@ export function getPhaseAvgScore(progress: Progress, phaseId: number): number | 
 
 export function getGlobalAvgScore(progress: Progress): number | null {
   const scores = EXERCISES.map((e) => getExerciseScore(progress[e.id] as ExerciseRecord | undefined)).filter(
-    (s): s is number => s !== null,
+    (s): s is number => s !== null
   )
   return scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null
 }
 
 export function applyGradeResult(record: ExerciseRecord, result: GradeResult): ExerciseRecord {
-  return { ...record, autoCorrect: result.autoCorrect, score: result.score, claudeFeedback: result.feedback }
+  return {
+    ...record,
+    autoCorrect: result.autoCorrect,
+    claudeFeedback: result.feedback,
+    score: result.score ?? undefined
+  }
 }

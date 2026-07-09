@@ -8,23 +8,20 @@ interface ScoresViewProps {
   courseData?: Course | null
 }
 
-export function ScoresView({ progress, courseData }: ScoresViewProps) {
-  // Prefer course-specific data over mutable globals
+export function ScoresView({ courseData, progress }: ScoresViewProps) {
   const phases = courseData ? courseData.phases : PHASES
-  const allExercises = courseData
-    ? courseData.phases.flatMap((p) => p.exercises)
-    : EXERCISES
+  const allExercises = courseData ? courseData.phases.flatMap((p) => p.exercises) : EXERCISES
 
   if (phases.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 gap-2">
-        <p className="text-sm" style={{ color: 'var(--text-3)' }}>No hay datos del curso disponibles.</p>
+      <div className='flex flex-col items-center justify-center gap-2 py-16'>
+        <p className='text-fg-subtle text-sm'>No hay datos del curso disponibles.</p>
       </div>
     )
   }
 
   return (
-    <div className="space-y-5">
+    <div className='space-y-5'>
       {phases.map((ph) => {
         const exercises = allExercises.filter((e) => e.phase === ph.id)
         const scores = exercises
@@ -33,75 +30,91 @@ export function ScoresView({ progress, courseData }: ScoresViewProps) {
         const avg = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null
         const scoredCount = scores.length
 
-        const avgColor = avg === null ? null : avg >= 80 ? '#6EE7B7' : avg >= 50 ? '#ffd866' : '#ffb3c6'
-        const avgBg = avg === null ? null : avg >= 80 ? 'rgba(169,220,118,0.10)' : avg >= 50 ? 'rgba(255,216,102,0.10)' : 'rgba(255,97,136,0.10)'
-        const avgBorder = avg === null ? null : avg >= 80 ? 'rgba(169,220,118,0.22)' : avg >= 50 ? 'rgba(255,216,102,0.22)' : 'rgba(255,97,136,0.22)'
+        const avgColor =
+          avg === null ? null : avg >= 80 ? 'var(--success)' : avg >= 50 ? 'var(--warning)' : 'var(--danger)'
+        const avgBg =
+          avg === null ? null : avg >= 80 ? 'var(--success-bg)' : avg >= 50 ? 'var(--warning-bg)' : 'var(--danger-bg)'
+        const avgBorder =
+          avg === null
+            ? null
+            : avg >= 80
+              ? 'var(--success-border)'
+              : avg >= 50
+                ? 'var(--warning-border)'
+                : 'var(--danger-border)'
 
         return (
           <div key={ph.id}>
-            <div className="flex items-center justify-between mb-2.5 px-1">
-              <h3 className="font-bold text-sm" style={{ color: 'var(--text-2)' }}>
+            <div className='mb-2.5 flex items-center justify-between px-1'>
+              <h3 className='text-fg-muted text-sm font-bold'>
                 {ph.icon} Fase {ph.id + 1} — {ph.name}
               </h3>
               {avg !== null ? (
                 <span
-                  className="text-xs font-bold px-2.5 py-1 rounded-full font-mono"
-                  style={{ background: avgBg!, color: avgColor!, border: `1px solid ${avgBorder!}` }}
+                  className='rounded-full px-2.5 py-1 font-mono text-xs font-bold'
+                  style={{ background: avgBg!, border: `1px solid ${avgBorder!}`, color: avgColor! }}
                 >
                   ⭐ {avg}/100{' '}
-                  <span style={{ opacity: 0.7 }}>({scoredCount}/{exercises.length})</span>
+                  <span className='opacity-70'>
+                    ({scoredCount}/{exercises.length})
+                  </span>
                 </span>
               ) : (
-                <span className="text-xs italic" style={{ color: 'var(--text-3)' }}>
-                  Sin calificar
-                </span>
+                <span className='text-fg-subtle text-xs italic'>Sin calificar</span>
               )}
             </div>
 
             {exercises.length === 0 ? (
-              <p className="text-xs px-3.5 py-2.5" style={{ color: 'var(--text-3)' }}>Sin ejercicios en esta fase.</p>
+              <p className='text-fg-subtle px-3.5 py-2.5 text-xs'>Sin ejercicios en esta fase.</p>
             ) : (
-              <div className="space-y-1.5">
+              <div className='space-y-1.5'>
                 {exercises.map((ex) => {
                   const saved = progress[ex.id] as ExerciseRecord | undefined
                   const score = getExerciseScore(saved)
-                  const isPending = saved && saved.autoCorrect === null && !saved.claudeFeedback
-                  const scoreColor = score === null ? null : score >= 80 ? '#6EE7B7' : score >= 50 ? '#ffd866' : '#ffb3c6'
+                  const isPending = saved?.autoCorrect === null && !saved.claudeFeedback
+                  const scoreColor =
+                    score === null
+                      ? null
+                      : score >= 80
+                        ? 'var(--success)'
+                        : score >= 50
+                          ? 'var(--warning)'
+                          : 'var(--danger)'
 
                   return (
                     <div
                       key={ex.id}
-                      className="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 transition-all"
-                      style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
+                      className='bg-card border-hairline flex items-center gap-2.5 rounded-xl border px-3.5 py-2.5 transition-all'
                     >
                       <TypeBadge type={ex.type} />
-                      <span className="text-xs font-mono shrink-0 hidden sm:block" style={{ color: 'var(--text-3)' }}>
-                        {ex.id}
-                      </span>
-                      <span className="text-xs flex-1 truncate" style={{ color: 'var(--text-2)' }}>
-                        {ex.question.slice(0, 60)}{ex.question.length > 60 ? '…' : ''}
+                      <span className='text-fg-subtle hidden shrink-0 font-mono text-xs sm:block'>{ex.id}</span>
+                      <span className='text-fg-muted flex-1 truncate text-xs'>
+                        {ex.question.slice(0, 60)}
+                        {ex.question.length > 60 ? '…' : ''}
                       </span>
                       {score !== null ? (
                         <span
-                          className="text-xs font-bold font-mono shrink-0 px-2 py-0.5 rounded-full"
+                          className='shrink-0 rounded-full px-2 py-0.5 font-mono text-xs font-bold'
                           style={{
-                            color: scoreColor!,
-                            background: score >= 80 ? 'rgba(169,220,118,0.10)' : score >= 50 ? 'rgba(255,216,102,0.10)' : 'rgba(255,97,136,0.10)',
+                            background:
+                              score >= 80
+                                ? 'var(--success-bg)'
+                                : score >= 50
+                                  ? 'var(--warning-bg)'
+                                  : 'var(--danger-bg)',
+                            color: scoreColor!
                           }}
                         >
                           {score}/100
                         </span>
                       ) : isPending ? (
-                        <span
-                          className="text-xs font-semibold shrink-0 px-2 py-0.5 rounded-full"
-                          style={{ background: 'rgba(255,216,102,0.10)', color: '#ffd866', border: '1px solid rgba(255,216,102,0.22)' }}
-                        >
+                        <span className='border-warning-border bg-warning-bg text-warning shrink-0 rounded-full border px-2 py-0.5 text-xs font-semibold'>
                           ⏳ Pendiente
                         </span>
                       ) : !saved ? (
-                        <span className="text-xs shrink-0" style={{ color: 'var(--text-3)' }}>—</span>
+                        <span className='text-fg-subtle shrink-0 text-xs'>—</span>
                       ) : (
-                        <span className="text-xs shrink-0" style={{ color: 'var(--text-3)' }}>?</span>
+                        <span className='text-fg-subtle shrink-0 text-xs'>?</span>
                       )}
                     </div>
                   )

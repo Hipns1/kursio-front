@@ -6,11 +6,20 @@
     background: var(--bg-base);
     color: var(--text-1);
     -webkit-font-smoothing: antialiased;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: var(--font-sans);
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    letter-spacing: -0.006em;
+  }
+
+  code,
+  pre,
+  kbd {
+    font-family: var(--font-mono);
   }
 
   button:not(:disabled),
-  [role="button"]:not(:disabled),
+  [role='button']:not(:disabled),
   label[for],
   select:not(:disabled) {
     cursor: pointer;
@@ -59,6 +68,32 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .bg-grad {
+    background: var(--grad);
+  }
+
+  .bg-grad-alt {
+    background: var(--grad-alt);
+  }
+
+  .bg-grad-success {
+    background: var(--grad-success);
+  }
+
+  /* Named `soft` rather than `sm` so it does not shadow Tailwind's own scale. */
+  .shadow-soft {
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Not `shadow-card`: the --color-card token makes Tailwind claim that name for a shadow colour. */
+  .shadow-panel {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-float {
+    box-shadow: var(--shadow-float);
   }
 }
 
@@ -113,11 +148,11 @@
 }
 
 .animate-slide-right {
-  animation: slideInRight 0.30s ease-out forwards;
+  animation: slideInRight 0.3s ease-out forwards;
 }
 
 .animate-slide-left {
-  animation: slideInLeft 0.30s ease-out forwards;
+  animation: slideInLeft 0.3s ease-out forwards;
 }
 
 .stagger > * {
@@ -125,14 +160,30 @@
   animation: fadeUp 0.35s ease-out forwards;
 }
 
-.stagger > *:nth-child(1) { animation-delay: 0.04s; }
-.stagger > *:nth-child(2) { animation-delay: 0.08s; }
-.stagger > *:nth-child(3) { animation-delay: 0.12s; }
-.stagger > *:nth-child(4) { animation-delay: 0.16s; }
-.stagger > *:nth-child(5) { animation-delay: 0.20s; }
-.stagger > *:nth-child(6) { animation-delay: 0.24s; }
-.stagger > *:nth-child(7) { animation-delay: 0.28s; }
-.stagger > *:nth-child(8) { animation-delay: 0.32s; }
+.stagger > *:nth-child(1) {
+  animation-delay: 0.04s;
+}
+.stagger > *:nth-child(2) {
+  animation-delay: 0.08s;
+}
+.stagger > *:nth-child(3) {
+  animation-delay: 0.12s;
+}
+.stagger > *:nth-child(4) {
+  animation-delay: 0.16s;
+}
+.stagger > *:nth-child(5) {
+  animation-delay: 0.2s;
+}
+.stagger > *:nth-child(6) {
+  animation-delay: 0.24s;
+}
+.stagger > *:nth-child(7) {
+  animation-delay: 0.28s;
+}
+.stagger > *:nth-child(8) {
+  animation-delay: 0.32s;
+}
 
 #global-progress {
   position: fixed;

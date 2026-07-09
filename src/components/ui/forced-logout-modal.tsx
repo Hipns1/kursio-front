@@ -9,11 +9,14 @@ interface Props {
 
 const COUNTDOWN = 8
 
-export function ForcedLogoutModal({ reason, onDone }: Props) {
+export function ForcedLogoutModal({ onDone, reason }: Props) {
   const [seconds, setSeconds] = useState(COUNTDOWN)
 
   useEffect(() => {
-    if (seconds <= 0) { onDone(); return }
+    if (seconds <= 0) {
+      onDone()
+      return
+    }
     const t = setTimeout(() => setSeconds((s) => s - 1), 1000)
     return () => clearTimeout(t)
   }, [seconds, onDone])
@@ -21,57 +24,42 @@ export function ForcedLogoutModal({ reason, onDone }: Props) {
   const progress = ((COUNTDOWN - seconds) / COUNTDOWN) * 100
 
   return (
-    <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
-      style={{ background: 'rgba(0,0,0,0.80)', backdropFilter: 'blur(12px)' }}
-    >
+    <div className='fixed inset-0 z-[9999] flex items-center justify-center bg-[rgba(0,0,0,0.80)] p-4 backdrop-blur-[12px]'>
       <div
-        className="w-full max-w-sm rounded-2xl overflow-hidden animate-fade-up"
-        style={{ background: 'var(--bg-card)', border: '1px solid rgba(255,97,136,0.35)', boxShadow: '0 0 60px rgba(255,97,136,0.18)' }}
+        className='animate-fade-up w-full max-w-sm overflow-hidden rounded-2xl'
+        style={{
+          background: 'var(--bg-card)',
+          border: '1px solid var(--danger-border)',
+          boxShadow: '0 0 60px var(--danger-bg)'
+        }}
       >
-        {/* Progress bar */}
-        <div className="h-1 w-full" style={{ background: 'rgba(255,255,255,0.05)' }}>
+        <div className='bg-tint-strong h-1 w-full'>
           <div
-            className="h-full transition-all duration-1000 ease-linear"
-            style={{ width: `${progress}%`, background: 'linear-gradient(90deg, #ff6188, #ab9df2)' }}
+            className='h-full transition-all duration-1000 ease-linear'
+            style={{ background: 'var(--grad)', width: `${progress}%` }}
           />
         </div>
 
-        <div className="p-7">
-          {/* Icon */}
-          <div
-            className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl mb-5 mx-auto"
-            style={{ background: 'rgba(255,97,136,0.12)', border: '1px solid rgba(255,97,136,0.30)' }}
-          >
+        <div className='p-7'>
+          <div className='border-danger-border bg-danger-bg mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border font-serif text-3xl font-normal'>
             {reason === 'disabled' ? '🔒' : '🚫'}
           </div>
 
-          {/* Title */}
-          <h2 className="font-black text-xl text-center mb-2" style={{ color: 'var(--text-1)' }}>
+          <h2 className='text-fg mb-2 text-center text-xl font-semibold'>
             {reason === 'disabled' ? 'Cuenta desactivada' : 'Cuenta eliminada'}
           </h2>
 
-          {/* Message */}
-          <p className="text-sm text-center leading-relaxed mb-6" style={{ color: 'var(--text-3)' }}>
+          <p className='text-fg-subtle mb-6 text-center text-sm leading-relaxed'>
             {reason === 'disabled'
               ? 'Tu cuenta fue desactivada por un administrador. Contactá al equipo para más información.'
               : 'Tu cuenta ya no existe en el sistema. Por favor comunicate con el administrador.'}
           </p>
 
-          {/* Countdown */}
-          <div
-            className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl"
-            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)' }}
-          >
-            <div
-              className="w-9 h-9 rounded-full flex items-center justify-center font-black text-lg shrink-0"
-              style={{ background: 'rgba(255,97,136,0.12)', color: '#ff6188', border: '1px solid rgba(255,97,136,0.25)' }}
-            >
+          <div className='border-hairline bg-tint flex items-center justify-center gap-2 rounded-xl border px-4 py-3'>
+            <div className='border-danger-border bg-danger-bg text-danger flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-lg font-semibold'>
               {seconds}
             </div>
-            <p className="text-xs" style={{ color: 'var(--text-3)' }}>
-              Serás redirigido al inicio de sesión automáticamente
-            </p>
+            <p className='text-fg-subtle text-xs'>Serás redirigido al inicio de sesión automáticamente</p>
           </div>
         </div>
       </div>

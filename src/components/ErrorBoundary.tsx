@@ -23,24 +23,13 @@ class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div
-          className="min-h-screen flex items-center justify-center p-6"
-          style={{ background: 'var(--bg-base)' }}
-        >
-          <div
-            className="w-full max-w-sm text-center rounded-2xl p-8"
-            style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
-          >
-            <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4"
-              style={{ background: 'rgba(255,97,136,0.12)', border: '1px solid rgba(255,97,136,0.25)' }}
-            >
+        <div className='bg-surface flex min-h-screen items-center justify-center p-6'>
+          <div className='bg-card border-hairline w-full max-w-sm rounded-2xl border p-8 text-center'>
+            <div className='border-danger-border bg-danger-bg mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border font-serif text-2xl font-normal'>
               ⚠️
             </div>
-            <p className="font-black text-base mb-1" style={{ color: 'var(--text-1)' }}>
-              Algo salió mal
-            </p>
-            <p className="text-xs mb-6 leading-relaxed" style={{ color: 'var(--text-3)' }}>
+            <p className='text-fg mb-1 text-base font-semibold'>Algo salió mal</p>
+            <p className='text-fg-subtle mb-6 text-xs leading-relaxed'>
               {this.state.message || 'Se produjo un error inesperado en la aplicación.'}
             </p>
             <button
@@ -48,8 +37,7 @@ class ErrorBoundary extends Component<Props, State> {
                 this.setState({ hasError: false, message: '' })
                 window.location.reload()
               }}
-              className="px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-80"
-              style={{ background: 'linear-gradient(135deg,#ab9df2,#78dce8)' }}
+              className='rounded-xl bg-[var(--grad)] px-6 py-2.5 text-sm font-bold text-white transition-all hover:opacity-80'
             >
               Recargar página
             </button>

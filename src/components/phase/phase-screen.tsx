@@ -18,14 +18,14 @@ interface PhaseScreenProps {
 }
 
 export function PhaseScreen({
+  onAnswer,
+  onBack,
+  onGrade,
+  onMarkRead,
+  onNextPhase,
   phaseId,
   progress,
-  onAnswer,
-  onMarkRead,
-  onBack,
-  studentToken,
-  onGrade,
-  onNextPhase,
+  studentToken
 }: PhaseScreenProps) {
   const phase = PHASES.find((p) => p.id === phaseId)
   const theoryDone = isTheoryComplete(progress, phaseId)

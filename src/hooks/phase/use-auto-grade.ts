@@ -11,7 +11,7 @@ interface UseAutoGradeReturn {
 export function useAutoGrade(
   exercise: Exercise,
   onGrade: ((exerciseId: string, result: GradeResult) => void) | undefined,
-  studentToken: string | null,
+  studentToken: string | null
 ): UseAutoGradeReturn {
   const [grading, setGrading] = useState(false)
   const [apiError, setApiError] = useState('')
@@ -30,11 +30,11 @@ export function useAutoGrade(
           ? 'Sesión expirada. Recargá la página.'
           : msg.includes('Failed to fetch')
             ? 'No se pudo conectar al servidor.'
-            : `Error: ${msg}`,
+            : `Error: ${msg}`
       )
     }
     setGrading(false)
   }
 
-  return { grading, apiError, grade }
+  return { apiError, grade, grading }
 }

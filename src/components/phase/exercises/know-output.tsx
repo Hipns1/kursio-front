@@ -9,14 +9,14 @@ interface KnowOutputProps {
   onAnswer: (record: ExerciseRecord) => void
 }
 
-export function KnowOutput({ exercise, saved, onAnswer }: KnowOutputProps) {
+export function KnowOutput({ exercise, onAnswer, saved }: KnowOutputProps) {
   const [val, setVal] = useState(saved?.userAnswer ?? '')
   const done = saved !== undefined
 
   const submit = () => {
     if (!val.trim()) return
     const ac = autoGrade(exercise, val)
-    onAnswer({ type: exercise.type, userAnswer: val, autoCorrect: ac, score: ac ? 100 : 0 })
+    onAnswer({ autoCorrect: ac, score: ac ? 100 : 0, type: exercise.type, userAnswer: val })
   }
 
   return (
@@ -25,15 +25,17 @@ export function KnowOutput({ exercise, saved, onAnswer }: KnowOutputProps) {
         value={val}
         onChange={(e) => setVal(e.target.value)}
         disabled={done}
-        placeholder="Tu respuesta..."
+        placeholder='Tu respuesta...'
         onKeyDown={(e) => e.key === 'Enter' && !done && submit()}
       />
       {!done && (
-        <div className="mt-3">
-          <PrimaryBtn onClick={submit} disabled={!val.trim()}>Confirmar</PrimaryBtn>
+        <div className='mt-3'>
+          <PrimaryBtn onClick={submit} disabled={!val.trim()}>
+            Confirmar
+          </PrimaryBtn>
         </div>
       )}
-      {done && <Feedback explanation={exercise.explanation} correct={saved!.autoCorrect} />}
+      {done && <Feedback explanation={exercise.explanation} correct={saved.autoCorrect} />}
     </div>
   )
 }

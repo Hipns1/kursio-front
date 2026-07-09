@@ -9,53 +9,52 @@ interface LessonCardProps {
   onRead: () => void
 }
 
-export function LessonCard({ lesson, idx, isRead, onRead }: LessonCardProps) {
+export function LessonCard({ idx, isRead, lesson, onRead }: LessonCardProps) {
   const [open, setOpen] = useState(false)
 
   return (
     <div
-      className="rounded-xl overflow-hidden transition-all duration-200"
+      className='overflow-hidden rounded-xl transition-all duration-200'
       style={{
-        border: isRead ? '1px solid rgba(169,220,118,0.25)' : '1px solid var(--border-subtle)',
-        background: isRead ? 'rgba(169,220,118,0.05)' : 'var(--bg-card)',
+        background: isRead ? 'var(--success-bg)' : 'var(--bg-card)',
+        border: isRead ? '1px solid var(--success-border)' : '1px solid var(--border-subtle)'
       }}
     >
-      <button className="w-full text-left px-4 py-3.5 flex items-center gap-3" onClick={() => setOpen((o) => !o)}>
+      <button className='flex w-full items-center gap-3 px-4 py-3.5 text-left' onClick={() => setOpen((o) => !o)}>
         <span
-          className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+          className='flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold'
           style={{
-            background: isRead ? 'var(--success)' : 'rgba(255,255,255,0.05)',
-            color: isRead ? '#fff' : 'var(--text-3)',
+            background: isRead ? 'var(--success)' : 'var(--tint-2)',
             border: isRead ? 'none' : '1px solid var(--border-subtle)',
+            color: isRead ? '#fff' : 'var(--text-3)'
           }}
         >
           {isRead ? '✓' : idx + 1}
         </span>
-        <span className="text-sm font-medium flex-1 text-left" style={{ color: isRead ? '#6EE7B7' : 'var(--text-1)' }}>
+        <span
+          className='flex-1 text-left text-sm font-medium'
+          style={{ color: isRead ? 'var(--success)' : 'var(--text-1)' }}
+        >
           {lesson.title}
         </span>
-        <span className="text-xs ml-2" style={{ color: 'var(--text-3)' }}>
-          {open ? '▲' : '▼'}
-        </span>
+        <span className='text-fg-subtle ml-2 text-xs'>{open ? '▲' : '▼'}</span>
       </button>
 
       {open && (
-        <div className="px-4 pb-4 pt-3" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+        <div className='border-hairline border-t px-4 pt-3 pb-4'>
           {lesson.blocks.map((block, i) => (
             <LessonBlock key={i} block={block} />
           ))}
           {!isRead ? (
             <button
               onClick={onRead}
-              className="w-full mt-3 text-white font-semibold py-2.5 rounded-xl text-sm transition-all"
-              style={{ background: 'var(--success)', boxShadow: '0 4px 12px rgba(169,220,118,0.25)' }}
+              className='mt-3 w-full rounded-xl py-2.5 text-sm font-semibold text-white transition-all'
+              style={{ background: 'var(--success)', boxShadow: '0 4px 12px var(--success-border)' }}
             >
               ✓ Marcar como leído
             </button>
           ) : (
-            <p className="text-center text-xs font-medium mt-2 py-2" style={{ color: 'var(--success)' }}>
-              ✓ Leído
-            </p>
+            <p className='text-success mt-2 py-2 text-center text-xs font-medium'>✓ Leído</p>
           )}
         </div>
       )}

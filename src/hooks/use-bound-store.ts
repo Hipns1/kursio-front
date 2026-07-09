@@ -8,17 +8,17 @@ type Store = LearningSlice
 export const useBoundStore = create(
   persist<Store>(
     (...a) => ({
-      ...createLearningSlice(...a),
+      ...createLearningSlice(...a)
     }),
     {
       name: 'bkl_settings',
-      partialize: (state) => ({ username: state.username, studentToken: state.studentToken }) as Store,
-      storage: createJSONStorage(() => localStorage),
       onRehydrateStorage: () => (state) => {
         if (state?.username) {
           state.progress = loadProgress(state.username)
         }
       },
-    },
-  ),
+      partialize: (state) => ({ studentToken: state.studentToken, username: state.username }) as Store,
+      storage: createJSONStorage(() => localStorage)
+    }
+  )
 )

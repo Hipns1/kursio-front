@@ -12,25 +12,23 @@ export function SessionGuard({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate()
   const { toast } = useToast()
 
-  const { studentToken, clearUser, allowedCourseIds, setAllowedCourseIds, activeCourseSlug, courses } =
-    useBoundStore(
-      useShallow((s) => ({
-        studentToken: s.studentToken,
-        clearUser: s.clearUser,
-        allowedCourseIds: s.allowedCourseIds,
-        setAllowedCourseIds: s.setAllowedCourseIds,
-        activeCourseSlug: s.activeCourseSlug,
-        courses: s.courses,
-      })),
-    )
+  const { activeCourseSlug, allowedCourseIds, clearUser, courses, setAllowedCourseIds, studentToken } = useBoundStore(
+    useShallow((s) => ({
+      activeCourseSlug: s.activeCourseSlug,
+      allowedCourseIds: s.allowedCourseIds,
+      clearUser: s.clearUser,
+      courses: s.courses,
+      setAllowedCourseIds: s.setAllowedCourseIds,
+      studentToken: s.studentToken
+    }))
+  )
 
   const [forcedLogout, setForcedLogout] = useState<'disabled' | 'deleted' | null>(null)
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  // Keep latest values accessible inside the interval without re-creating it
-  const stateRef = useRef({ allowedCourseIds, activeCourseSlug, courses })
+  const stateRef = useRef({ activeCourseSlug, allowedCourseIds, courses })
   useEffect(() => {
-    stateRef.current = { allowedCourseIds, activeCourseSlug, courses }
+    stateRef.current = { activeCourseSlug, allowedCourseIds, courses }
   })
 
   useEffect(() => {
@@ -43,7 +41,6 @@ export function SessionGuard({ children }: { children: React.ReactNode }) {
         const newIds = result.allowedCourseIds
         setAllowedCourseIds(newIds)
 
-        // Check if the current course is still accessible
         const { activeCourseSlug: slug, courses: courseList } = stateRef.current
         if (slug && newIds.length > 0 && courseList.length > 0) {
           const active = courseList.find((c) => c.slug === slug)
@@ -59,9 +56,11 @@ export function SessionGuard({ children }: { children: React.ReactNode }) {
       }
     }
 
-    check() // immediate check on mount / token change
+    check()
     pollRef.current = setInterval(check, POLL_MS)
-    return () => { if (pollRef.current) clearInterval(pollRef.current) }
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current)
+    }
   }, [studentToken])
 
   const handleDone = () => {

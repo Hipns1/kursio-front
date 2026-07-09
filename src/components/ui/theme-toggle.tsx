@@ -20,12 +20,12 @@ export function ThemeToggle() {
     <button
       onClick={toggle}
       title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
-      className="text-sm px-2.5 py-1.5 rounded-lg transition-all"
+      className='rounded-lg px-2.5 py-1.5 text-sm transition-all'
       style={{
-        background: 'rgba(171,157,242,0.10)',
+        background: 'var(--primary-glow)',
         border: '1px solid var(--border-default)',
         color: 'var(--text-2)',
-        lineHeight: 1,
+        lineHeight: 1
       }}
     >
       {theme === 'dark' ? '☀️' : '🌙'}

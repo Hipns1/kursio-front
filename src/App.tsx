@@ -9,10 +9,10 @@ import './styles/global.css'
 const RootError = () => {
   const error = useRouteError() as Error
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-base)', color: 'var(--text-2)' }}>
-      <div className="text-center">
-        <p className="text-lg font-bold mb-2" style={{ color: 'var(--danger)' }}>Error inesperado</p>
-        <p className="text-sm">{error?.message ?? 'Algo salió mal.'}</p>
+    <div className='bg-surface text-fg-muted flex min-h-screen items-center justify-center'>
+      <div className='text-center'>
+        <p className='text-danger mb-2 text-lg font-bold'>Error inesperado</p>
+        <p className='text-sm'>{error?.message ?? 'Algo salió mal.'}</p>
       </div>
     </div>
   )
@@ -31,12 +31,12 @@ function App() {
               </ErrorBoundary>
             ),
             errorElement: <RootError />,
-            path: '/',
-          },
+            path: '/'
+          }
         ],
-        { basename: PUBLIC_URL },
+        { basename: PUBLIC_URL }
       ),
-    [],
+    []
   )
 
   return <RouterProvider router={router} />

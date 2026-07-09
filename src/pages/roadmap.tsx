@@ -7,13 +7,13 @@ import { RoadmapScreen } from '@/components/learning/roadmap-screen'
 export function Roadmap() {
   const navigate = useNavigate()
 
-  const { username, studentToken, roadmap, courses } = useBoundStore(
+  const { courses, roadmap, studentToken, username } = useBoundStore(
     useShallow((s) => ({
-      username: s.username,
-      studentToken: s.studentToken,
-      roadmap: s.roadmap,
       courses: s.courses,
-    })),
+      roadmap: s.roadmap,
+      studentToken: s.studentToken,
+      username: s.username
+    }))
   )
 
   useEffect(() => {
@@ -23,11 +23,5 @@ export function Roadmap() {
 
   if (!username || !studentToken || !roadmap) return null
 
-  return (
-    <RoadmapScreen
-      roadmap={roadmap}
-      courses={courses}
-      onBack={() => navigate('/', { replace: true })}
-    />
-  )
+  return <RoadmapScreen roadmap={roadmap} courses={courses} onBack={() => navigate('/', { replace: true })} />
 }

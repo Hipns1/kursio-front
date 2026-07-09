@@ -36,7 +36,13 @@ export interface Lesson {
   blocks: LessonBlock[]
 }
 
-export type ExerciseType = 'multiple-choice' | 'find-bug' | 'know-output' | 'improve-code' | 'complete-code' | 'code-along'
+export type ExerciseType =
+  | 'multiple-choice'
+  | 'find-bug'
+  | 'know-output'
+  | 'improve-code'
+  | 'complete-code'
+  | 'code-along'
 
 export interface Exercise {
   id: string
@@ -53,7 +59,7 @@ export interface Exercise {
 
 export interface CoursePhase extends Phase {
   lessons: Lesson[]
-  exercises: Array<Exercise & { isDefault?: boolean }>
+  exercises: (Exercise & { isDefault?: boolean })[]
 }
 
 export interface Course extends CourseSummary {
@@ -70,9 +76,7 @@ export interface ExerciseRecord {
   claudeFeedback?: string
 }
 
-export interface LessonProgress {
-  [lessonId: string]: boolean
-}
+export type LessonProgress = Record<string, boolean>
 
 export interface Progress {
   __lessons?: LessonProgress
@@ -81,7 +85,7 @@ export interface Progress {
 
 export interface GradeResult {
   autoCorrect: boolean | null
-  score: number
+  score: number | null
   feedback: string
 }
 

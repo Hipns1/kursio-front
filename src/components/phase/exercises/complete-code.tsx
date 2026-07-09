@@ -8,7 +8,7 @@ interface CompleteCodeProps {
   onAnswer: (record: ExerciseRecord) => void
 }
 
-export function CompleteCode({ exercise, saved, onAnswer }: CompleteCodeProps) {
+export function CompleteCode({ exercise, onAnswer, saved }: CompleteCodeProps) {
   const parts = exercise.code!.split('___')
   const count = parts.length - 1
   const [inputs, setInputs] = useState<string[]>(saved?.answers ?? Array(count).fill(''))
@@ -16,7 +16,7 @@ export function CompleteCode({ exercise, saved, onAnswer }: CompleteCodeProps) {
   const [results, setResults] = useState<boolean[] | null>(
     saved?.answers
       ? exercise.blanks!.map((b, i) => (saved.answers![i] ?? '').toLowerCase().trim() === b.toLowerCase())
-      : null,
+      : null
   )
 
   const update = (i: number, v: string) => {
@@ -30,32 +30,29 @@ export function CompleteCode({ exercise, saved, onAnswer }: CompleteCodeProps) {
     setResults(res)
     setSubmitted(true)
     const allCorrect = res.every(Boolean)
-    onAnswer({ type: exercise.type, answers: inputs, autoCorrect: allCorrect, score: allCorrect ? 100 : 0 })
+    onAnswer({ answers: inputs, autoCorrect: allCorrect, score: allCorrect ? 100 : 0, type: exercise.type })
   }
 
   return (
     <div>
-      <div
-        className="rounded-xl p-4 text-xs leading-relaxed overflow-x-auto font-mono"
-        style={{ background: '#0D1117', border: '1px solid var(--border-subtle)' }}
-      >
+      <div className='border-hairline overflow-x-auto rounded-xl border bg-[#0D1117] p-4 font-mono text-xs leading-relaxed'>
         {parts.map((part, i) => (
           <span key={i}>
-            <span className="text-green-300" style={{ whiteSpace: 'pre' }}>{part}</span>
+            <span className='whitespace-pre text-green-300'>{part}</span>
             {i < count && (
               <input
                 value={inputs[i]}
                 onChange={(e) => !submitted && update(i, e.target.value)}
                 disabled={submitted}
-                placeholder="___"
-                className="w-28 text-center bg-transparent outline-none mx-1 font-mono text-xs"
+                placeholder='___'
+                className='mx-1 w-28 bg-transparent text-center font-mono text-xs outline-none'
                 style={{
                   borderBottom: submitted
                     ? results?.[i]
-                      ? '2px solid #6EE7B7'
-                      : '2px solid #ffb3c6'
-                    : '2px solid #ffd866',
-                  color: submitted ? (results?.[i] ? '#6EE7B7' : '#ffb3c6') : '#FEF08A',
+                      ? '2px solid var(--success)'
+                      : '2px solid var(--danger)'
+                    : '2px solid var(--warning)',
+                  color: submitted ? (results?.[i] ? 'var(--success)' : 'var(--danger)') : '#FEF08A'
                 }}
               />
             )}
@@ -63,8 +60,8 @@ export function CompleteCode({ exercise, saved, onAnswer }: CompleteCodeProps) {
         ))}
       </div>
       {!submitted && (
-        <div className="mt-3">
-          <PrimaryBtn onClick={submit} disabled={inputs.some((v) => !v.trim())} color="green">
+        <div className='mt-3'>
+          <PrimaryBtn onClick={submit} disabled={inputs.some((v) => !v.trim())} color='green'>
             Verificar
           </PrimaryBtn>
         </div>

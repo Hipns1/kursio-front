@@ -1,19 +1,19 @@
 ﻿type BtnColor = 'primary' | 'green' | 'red' | 'orange' | 'violet'
 
 const gradients: Record<BtnColor, string> = {
-  primary: 'linear-gradient(135deg,#ab9df2,#78dce8)',
-  green: 'linear-gradient(135deg,#a9dc76,#75a73e)',
-  red: 'linear-gradient(135deg,#ff6188,#DC2626)',
+  green: 'var(--grad-success)',
   orange: 'linear-gradient(135deg,#F97316,#EA580C)',
-  violet: 'linear-gradient(135deg,#8B5CF6,#7C3AED)',
+  primary: 'var(--grad)',
+  red: 'linear-gradient(135deg,var(--danger),#DC2626)',
+  violet: 'linear-gradient(135deg,#8B5CF6,#7C3AED)'
 }
 
 const glows: Record<BtnColor, string> = {
-  primary: 'rgba(171,157,242,0.35)',
-  green: 'rgba(169,220,118,0.30)',
-  red: 'rgba(255,97,136,0.30)',
+  green: 'var(--success-border)',
   orange: 'rgba(249,115,22,0.30)',
-  violet: 'rgba(139,92,246,0.30)',
+  primary: 'var(--primary-glow)',
+  red: 'var(--danger-border)',
+  violet: 'rgba(139,92,246,0.30)'
 }
 
 interface PrimaryBtnProps {
@@ -24,22 +24,22 @@ interface PrimaryBtnProps {
   className?: string
 }
 
-export function PrimaryBtn({ onClick, disabled, children, color = 'primary', className = '' }: PrimaryBtnProps) {
+export function PrimaryBtn({ children, className = '', color = 'primary', disabled, onClick }: PrimaryBtnProps) {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`w-full text-white font-bold py-3 rounded-xl text-sm transition-all active:scale-[0.98] ${className}`}
+      className={`w-full rounded-xl py-3 text-sm font-bold text-white transition-all active:scale-[0.98] ${className}`}
       style={
         disabled
           ? {
-              background: 'rgba(255,255,255,0.06)',
+              background: 'var(--tint-2)',
               color: 'var(--text-3)',
-              cursor: 'not-allowed',
+              cursor: 'not-allowed'
             }
           : {
               background: gradients[color],
-              boxShadow: `0 4px 16px ${glows[color]}`,
+              boxShadow: `0 4px 16px ${glows[color]}`
             }
       }
       onMouseEnter={(e) => {

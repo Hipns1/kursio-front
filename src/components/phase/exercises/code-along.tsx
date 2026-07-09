@@ -12,14 +12,14 @@ interface CodeAlongProps {
   onGrade?: (exerciseId: string, result: GradeResult) => void
 }
 
-export function CodeAlong({ exercise, saved, onAnswer, studentToken, onGrade }: CodeAlongProps) {
+export function CodeAlong({ exercise, onAnswer, onGrade, saved, studentToken }: CodeAlongProps) {
   const [val, setVal] = useState(saved?.userAnswer ?? '')
-  const { grading, apiError, grade } = useAutoGrade(exercise, onGrade, studentToken)
+  const { apiError, grade, grading } = useAutoGrade(exercise, onGrade, studentToken)
   const done = saved !== undefined
 
   const submit = async () => {
     if (!val.trim()) return
-    onAnswer({ type: exercise.type, userAnswer: val, autoCorrect: null })
+    onAnswer({ autoCorrect: null, type: exercise.type, userAnswer: val })
     await grade(val)
   }
 
@@ -27,8 +27,8 @@ export function CodeAlong({ exercise, saved, onAnswer, studentToken, onGrade }: 
     <div>
       <CodeEditor value={val} onChange={done ? undefined : setVal} readOnly={done} minHeight={260} />
       {!done && (
-        <div className="mt-3">
-          <PrimaryBtn onClick={submit} disabled={!val.trim()} color="violet">
+        <div className='mt-3'>
+          <PrimaryBtn onClick={submit} disabled={!val.trim()} color='violet'>
             Enviar y auto-calificar 🤖
           </PrimaryBtn>
         </div>

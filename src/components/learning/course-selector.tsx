@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { CourseSummary, Progress } from '@/types/learning'
-import { CourseIcon, ThemeToggle } from '@/components/ui'
+import { CourseIcon } from '@/components/ui'
+import { PageHeader, ReadingColumn } from '@/components/layout'
 import { ALL_COURSES } from '@/utils/consts/learning-data'
 
 interface CourseSelectorScreenProps {
@@ -10,20 +11,6 @@ interface CourseSelectorScreenProps {
   progress: Progress
   hasRoadmap: boolean
   onRoadmap: () => void
-  onSettings: () => void
-}
-
-function UserAvatar({ name }: { name: string }) {
-  const initials = name
-    .split(' ')
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase() ?? '')
-    .join('')
-  return (
-    <div className='bg-grad text-on-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold select-none'>
-      {initials || '?'}
-    </div>
-  )
 }
 
 function CourseCard({
@@ -51,7 +38,7 @@ function CourseCard({
 
   return (
     <button
-      onClick={() => navigate(`/course/${course.slug}`)}
+      onClick={() => navigate(`/cursos/${course.slug}`)}
       className='w-full overflow-hidden rounded-2xl text-left transition-all hover:scale-[1.01]'
       style={{
         background: 'var(--bg-card)',
@@ -147,7 +134,6 @@ export function CourseSelectorScreen({
   courses,
   hasRoadmap,
   onRoadmap,
-  onSettings,
   progress,
   username
 }: CourseSelectorScreenProps) {
@@ -170,40 +156,24 @@ export function CourseSelectorScreen({
   const totalLessonsRead = Object.keys(progress.__lessons || {}).length
 
   return (
-    <div className='bg-surface min-h-screen'>
-      <nav className='bg-nav border-hairline sticky top-0 z-10 flex items-center justify-between border-b px-5 py-4 backdrop-blur-[20px]'>
-        <div>
-          <div className='text-fg text-lg leading-tight font-semibold'>Mis Cursos</div>
-          <div className='text-fg-subtle text-xs'>Bienvenido de nuevo, {username}</div>
-        </div>
-        <div className='flex items-center gap-2'>
-          <ThemeToggle />
-          {hasRoadmap && (
+    <ReadingColumn width='wide'>
+      <PageHeader
+        eyebrow='Aprendizaje'
+        title='Mis cursos'
+        subtitle={`Bienvenido de nuevo, ${username}`}
+        actions={
+          hasRoadmap && (
             <button
               onClick={onRoadmap}
-              title='Mi Roadmap'
-              className='flex h-9 items-center gap-1.5 rounded-lg px-3 text-xs font-bold transition-all hover:opacity-80'
-              style={{
-                background: 'var(--grad)',
-                boxShadow: '0 2px 8px var(--primary-glow)',
-                color: '#fff'
-              }}
+              className='border-hairline text-fg-muted hover:text-fg rounded border px-3 py-1.5 text-xs font-medium transition-colors'
             >
-              🗺️ Roadmap
+              Ver mi ruta
             </button>
-          )}
-          <button
-            onClick={onSettings}
-            title='Configuración'
-            className='border-hairline bg-tint flex h-9 w-9 items-center justify-center rounded-lg border transition-all hover:opacity-70'
-          >
-            ⚙️
-          </button>
-          <UserAvatar name={username} />
-        </div>
-      </nav>
+          )
+        }
+      />
 
-      <div className='animate-fade-up mx-auto max-w-4xl space-y-6 px-4 py-8'>
+      <div className='animate-fade-up space-y-6'>
         <div className='stagger grid grid-cols-3 gap-3'>
           <div className='bg-card border-hairline rounded-2xl border p-4 text-center'>
             <div className='text-fg mb-0.5 font-mono font-serif text-2xl font-normal'>{courses.length}</div>
@@ -254,6 +224,6 @@ export function CourseSelectorScreen({
 
         <div className='h-4' />
       </div>
-    </div>
+    </ReadingColumn>
   )
 }

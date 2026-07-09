@@ -32,16 +32,16 @@ export function Phase() {
   )
 
   const courseSlug = slug ?? activeCourseSlug
-  const backPath = courseSlug ? `/course/${courseSlug}` : '/'
+  const backPath = courseSlug ? `/cursos/${courseSlug}` : '/cursos'
 
-  if (!username || !studentToken) return <Navigate to='/' replace />
-  if (contentVersion === 0) return <Navigate to='/' replace />
+  if (!username || !studentToken) return <Navigate to='/login' replace />
+  if (contentVersion === 0) return <Navigate to='/cursos' replace />
   if (isNaN(phaseId) || !PHASES.find((p) => p.id === phaseId)) return <Navigate to={backPath} replace />
 
   const nextPhaseId = phaseId + 1
   const handleNextPhase = () => {
     if (nextPhaseId < PHASES.length) {
-      navigate(courseSlug ? `/course/${courseSlug}/phase/${nextPhaseId}` : `/phase/${nextPhaseId}`)
+      navigate(`/cursos/${courseSlug}/fases/${nextPhaseId}`)
     } else {
       navigate(backPath)
     }

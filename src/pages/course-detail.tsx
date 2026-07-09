@@ -1,7 +1,8 @@
-﻿import { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
-import { CourseIcon, RingProgress, ThemeToggle } from '@/components/ui'
+import { RingProgress } from '@/components/ui'
+import { PageHeader, ReadingColumn } from '@/components/layout'
 import { useBoundStore } from '@/hooks'
 import { EXERCISES, LESSONS, PHASES } from '@/utils/consts/learning-data'
 import {
@@ -96,45 +97,28 @@ export function CourseDetail() {
     }).length
   }
 
-  const handlePhase = (phaseId: number) => navigate(`/course/${slug}/phase/${phaseId}`)
+  const handlePhase = (phaseId: number) => navigate(`/cursos/${slug}/fases/${phaseId}`)
   const handleResume = (s: { phaseId: number; tab: 'theory' | 'exercises' }) => {
-    navigate(`/course/${slug}/phase/${s.phaseId}?tab=${s.tab}`)
+    navigate(`/cursos/${slug}/fases/${s.phaseId}?tab=${s.tab}`)
   }
 
   return (
-    <div className='bg-surface min-h-screen'>
-      <nav className='bg-nav border-hairline sticky top-0 z-10 flex items-center gap-3 border-b px-6 py-3.5 backdrop-blur-[20px]'>
-        <button
-          onClick={() => navigate('/')}
-          className='border-hairline bg-tint flex h-8 w-8 items-center justify-center rounded-lg border text-sm transition-all hover:opacity-70'
-          title='Volver a cursos'
-        >
-          ←
-        </button>
-        <div
-          className='flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-xl text-base'
-          style={{ background: `${course.color}25`, border: `1px solid ${course.color}40` }}
-        >
-          <CourseIcon icon={course.icon} className='h-8 w-8' />
-        </div>
-        <div className='min-w-0 flex-1'>
-          <div className='text-fg truncate text-sm leading-tight font-semibold'>{course.name}</div>
-          <div className='text-fg-subtle text-xs leading-tight'>
-            {PHASES.length} módulos · {username}
-          </div>
-        </div>
+    <ReadingColumn width='wide'>
+      <PageHeader
+        eyebrow='Curso'
+        title={course.name}
+        subtitle={`${PHASES.length} módulos · ${username}`}
+        actions={
+          <button
+            onClick={() => navigate(`/cursos/${slug}/notas`)}
+            className='border-hairline text-fg-muted hover:text-fg rounded border px-3 py-1.5 text-xs font-medium transition-colors'
+          >
+            Calificaciones
+          </button>
+        }
+      />
 
-        <button
-          onClick={() => navigate(`/course/${slug}/scores`)}
-          className='border-hairline text-fg-muted bg-tint hidden items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all hover:opacity-80 sm:flex'
-        >
-          📊 Calificaciones
-        </button>
-
-        <ThemeToggle />
-      </nav>
-
-      <div className='mx-auto max-w-5xl space-y-5 px-4 py-8'>
+      <div className='space-y-5'>
         <div className='bg-card border-line shadow-panel rounded-2xl border p-6'>
           <div className='mb-4 flex flex-col justify-between gap-5 sm:flex-row sm:items-end'>
             <div>
@@ -190,7 +174,7 @@ export function CourseDetail() {
               <p className='text-fg-muted mt-0.5 text-xs'>
                 Revisá tus{' '}
                 <button
-                  onClick={() => navigate(`/course/${slug}/scores`)}
+                  onClick={() => navigate(`/cursos/${slug}/notas`)}
                   className='text-success underline underline-offset-2 transition-opacity hover:opacity-70'
                 >
                   calificaciones
@@ -258,7 +242,7 @@ export function CourseDetail() {
               Módulos del curso — {PHASES.length} fases
             </h2>
             <button
-              onClick={() => navigate(`/course/${slug}/scores`)}
+              onClick={() => navigate(`/cursos/${slug}/notas`)}
               className='text-fg-subtle flex items-center gap-1 text-xs font-semibold transition-opacity hover:opacity-70 sm:hidden'
             >
               📊 Calificaciones
@@ -363,6 +347,6 @@ export function CourseDetail() {
           </div>
         </div>
       </div>
-    </div>
+    </ReadingColumn>
   )
 }

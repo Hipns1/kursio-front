@@ -1,5 +1,4 @@
-﻿import { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import type { CourseSummary, CreatedStudent, StudentSummary, UpdateStudentPayload } from '@/services/backend'
 import {
   createStudent,
@@ -10,7 +9,8 @@ import {
   toggleStudentActive,
   updateStudent
 } from '@/services/backend'
-import { Badge, ConfirmModal, CopyBtn, DarkInput, ScoreChip, ThemeToggle, useToast } from '@/components/ui'
+import { Badge, ConfirmModal, CopyBtn, DarkInput, ScoreChip, useToast } from '@/components/ui'
+import { PageHeader, ReadingColumn } from '@/components/layout'
 import { formatDate } from '@/utils/helpers/format'
 import { is401 } from '@/utils/helpers/http'
 import { useEscapeKey } from '@/hooks/use-escape-key'
@@ -24,7 +24,6 @@ interface AdminDashProps {
 }
 
 export function AdminDash({ onLogout, token }: AdminDashProps) {
-  const location = useLocation()
   const [students, setStudents] = useState<StudentSummary[]>([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
@@ -268,89 +267,26 @@ export function AdminDash({ onLogout, token }: AdminDashProps) {
   })()
 
   return (
-    <div className='bg-surface min-h-screen'>
-      <nav className='bg-nav border-hairline sticky top-0 z-10 flex items-center justify-between border-b px-6 py-3.5 backdrop-blur-[20px]'>
-        <div className='flex items-center gap-3'>
-          <div
-            className='flex h-8 w-8 items-center justify-center rounded-xl text-base'
-            style={{ background: 'var(--grad)', boxShadow: '0 4px 12px var(--primary-glow)' }}
-          >
-            🛡️
-          </div>
-          <div>
-            <div className='text-fg text-sm leading-tight font-bold'>Panel Admin</div>
-          </div>
-        </div>
-        <div className='flex items-center gap-2'>
-          <ThemeToggle />
-          <button
-            onClick={() => {
-              setShowCreateModal(true)
-              setCreated(null)
-              setCreateError('')
-            }}
-            className='hidden items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all hover:opacity-80 sm:flex'
-            style={{ background: 'var(--grad)', boxShadow: '0 2px 8px var(--primary-glow)', color: '#fff' }}
-          >
-            ➕ Nuevo aprendiz
-          </button>
+    <ReadingColumn width='wide'>
+      <PageHeader
+        eyebrow='Administración'
+        title='Aprendices'
+        subtitle='Altas, accesos y progreso del grupo.'
+        actions={
           <button
             onClick={() => {
               setRefreshing(true)
-              load()
+              void load()
             }}
             disabled={refreshing}
-            className='rounded-lg px-3 py-1.5 text-xs font-semibold transition-all hover:opacity-80'
-            style={{
-              background: 'var(--primary-glow)',
-              border: '1px solid var(--border-default)',
-              color: refreshing ? 'var(--text-3)' : 'var(--primary)'
-            }}
+            className='border-hairline text-fg-muted hover:text-fg rounded border px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-50'
           >
-            {refreshing ? 'Actualizando…' : loadError ? '↻ Reintentar' : '↻ Actualizar'}
+            {refreshing ? 'Actualizando…' : loadError ? 'Reintentar' : 'Actualizar'}
           </button>
-          <button
-            onClick={onLogout}
-            className='border-hairline text-fg-muted bg-tint rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all hover:opacity-80'
-          >
-            Cerrar sesión
-          </button>
-        </div>
-      </nav>
+        }
+      />
 
-      <div className='border-hairline border-b'>
-        <div className='mx-auto flex max-w-6xl gap-1 px-4 pt-2'>
-          {(
-            [
-              { label: '👥 Aprendices', to: '/admin/aprendices' },
-              { label: '📚 Contenido', to: '/admin/contenido' },
-              { label: '🧭 Onboarding', to: '/admin/onboarding' }
-            ] as const
-          ).map(({ label, to }) => {
-            const active = location.pathname === to
-            return (
-              <Link
-                key={to}
-                to={to}
-                className='rounded-t-xl px-4 py-2 text-sm font-semibold transition-all'
-                style={
-                  active
-                    ? {
-                        background: 'var(--bg-card)',
-                        borderBottom: '2px solid var(--primary)',
-                        color: 'var(--primary)'
-                      }
-                    : { color: 'var(--text-3)' }
-                }
-              >
-                {label}
-              </Link>
-            )
-          })}
-        </div>
-      </div>
-
-      <div className='animate-fade-up mx-auto max-w-6xl space-y-6 px-4 py-8'>
+      <div className='animate-fade-up space-y-6'>
         {
           <>
             <div className='stagger grid grid-cols-2 gap-3 sm:grid-cols-4'>
@@ -893,6 +829,6 @@ export function AdminDash({ onLogout, token }: AdminDashProps) {
             </Modal>
           )
         })()}
-    </div>
+    </ReadingColumn>
   )
 }

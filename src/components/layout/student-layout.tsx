@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
-import { CourseSelectorScreen, SettingsModal, WelcomeScreen } from '@/components/learning'
+import { SettingsModal } from '@/components/learning'
+import { ThemeToggle } from '@/components/ui'
 import { useBoundStore } from '@/hooks'
 import { fetchContent, getRoadmap } from '@/services/backend'
+import { Brand } from './brand'
+import { TopBar, TopBarButton } from './top-bar'
 
 function LoadingScreen() {
   return (
@@ -13,16 +16,14 @@ function LoadingScreen() {
   )
 }
 
-export function Learning() {
-  const [hydrated, setHydrated] = useState(false)
+export function StudentLayout() {
   const navigate = useNavigate()
+  const [hydrated, setHydrated] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
 
   const {
-    allowedCourseIds,
     clearUser,
     contentVersion,
-    courses,
-    progress,
     roadmap,
     roadmapChecked,
     roadmapMissing,
@@ -30,16 +31,12 @@ export function Learning() {
     setRoadmap,
     setRoadmapChecked,
     setRoadmapMissing,
-    setStudentLogin,
     studentToken,
     username
   } = useBoundStore(
     useShallow((s) => ({
-      allowedCourseIds: s.allowedCourseIds,
       clearUser: s.clearUser,
       contentVersion: s.contentVersion,
-      courses: s.courses,
-      progress: s.progress,
       roadmap: s.roadmap,
       roadmapChecked: s.roadmapChecked,
       roadmapMissing: s.roadmapMissing,
@@ -47,7 +44,6 @@ export function Learning() {
       setRoadmap: s.setRoadmap,
       setRoadmapChecked: s.setRoadmapChecked,
       setRoadmapMissing: s.setRoadmapMissing,
-      setStudentLogin: s.setStudentLogin,
       studentToken: s.studentToken,
       username: s.username
     }))
@@ -75,64 +71,50 @@ export function Learning() {
       })
       .catch((err: Error) => {
         setRoadmapChecked(true)
-        if (err.message.startsWith('404')) {
-          setRoadmapMissing(true)
-          navigate('/onboarding', { replace: true })
-        }
+        if (err.message.startsWith('404')) setRoadmapMissing(true)
       })
   }, [username, studentToken, contentVersion, roadmapChecked])
 
-  const [showSettings, setShowSettings] = useState(false)
-
-  const handleEnter = (
-    token: string,
-    name: string,
-    p: import('@/types/learning').Progress,
-    aid: number[],
-    coursesData: import('@/types/learning').Course[]
-  ) => {
-    setStudentLogin(token, name, p, aid)
-    setContent(coursesData)
-  }
+  if (!hydrated) return <LoadingScreen />
+  if (!username || !studentToken) return <Navigate to='/login' replace />
+  if (contentVersion === 0 || !roadmapChecked) return <LoadingScreen />
+  if (roadmapMissing) return <Navigate to='/onboarding' replace />
 
   const handleLogout = () => {
     clearUser()
     setShowSettings(false)
-  }
-
-  if (!hydrated) return <LoadingScreen />
-
-  if (!username || !studentToken) {
-    return <WelcomeScreen onEnter={handleEnter} />
-  }
-
-  if (contentVersion === 0 || !roadmapChecked) return <LoadingScreen />
-
-  if (roadmapChecked && roadmapMissing) {
-    return <Navigate to='/onboarding' replace />
-  }
-
-  const visibleCourses =
-    allowedCourseIds.length === 0 ? courses : courses.filter((c) => allowedCourseIds.includes(c.id))
-
-  if (visibleCourses.length === 1) {
-    return <Navigate to={`/course/${visibleCourses[0].slug}`} replace />
+    navigate('/login', { replace: true })
   }
 
   return (
-    <>
+    <div className='bg-surface min-h-screen'>
       <div id='global-progress' />
-      <CourseSelectorScreen
-        username={username}
-        courses={visibleCourses}
-        progress={progress}
-        hasRoadmap={!!roadmap}
-        onRoadmap={() => navigate('/roadmap')}
-        onSettings={() => setShowSettings(true)}
-      />
+      <TopBar
+        actions={
+          <>
+            {roadmap && (
+              <Link
+                to='/mi-ruta'
+                className='border-hairline text-fg-muted hover:text-fg hidden rounded border px-2.5 py-1.5 text-xs font-medium transition-colors sm:inline-block'
+              >
+                Mi ruta
+              </Link>
+            )}
+            <ThemeToggle />
+            <TopBarButton onClick={() => setShowSettings(true)} title={username}>
+              {username}
+            </TopBarButton>
+          </>
+        }
+      >
+        <Brand subtitle='Aprendizaje' />
+      </TopBar>
+
+      <Outlet />
+
       {showSettings && (
         <SettingsModal username={username} onLogout={handleLogout} onClose={() => setShowSettings(false)} />
       )}
-    </>
+    </div>
   )
 }

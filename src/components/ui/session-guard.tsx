@@ -46,7 +46,7 @@ export function SessionGuard({ children }: { children: React.ReactNode }) {
           const active = courseList.find((c) => c.slug === slug)
           if (active && !newIds.includes(active.id)) {
             toast('Ya no tenés acceso a este curso.', 'warning')
-            navigate('/')
+            navigate('/login')
           }
         }
       } catch (e) {
